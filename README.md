@@ -1,2 +1,2 @@
-# FORCE
-Community-powered server controller for TrackMania Forever
+# FORCE™
+💜 A modern, community-driven server controller for TrackMania Forever
