@@ -36,7 +36,7 @@ internal static class Program
 
         foreach (var player in playerList)
         {
-            Console.WriteLine($"   - [{player.Login}] {player.NickName} (Spectator: {player.Spectator})");
+            Console.WriteLine($"   - [{player.Login}] {player.NickName} (Spectator: {player.SpectatorStatus.Spectator})");
         }
 
         await force.Client.EnableCallbacksAsync();
