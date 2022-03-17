@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FORCE", "src\FORCE\FORCE.csproj", "{1CF3137E-1951-4C68-B35D-41F2FB8B7C90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FORCE", "src\FORCE\FORCE.csproj", "{1CF3137E-1951-4C68-B35D-41F2FB8B7C90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{D2D42CC4-5199-492C-BABB-711D34FF67D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GbxRemote.Net", "submodules\GbxRemote.Net\GbxRemote.Net\GbxRemote.Net.csproj", "{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{1CF3137E-1951-4C68-B35D-41F2FB8B7C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CF3137E-1951-4C68-B35D-41F2FB8B7C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CF3137E-1951-4C68-B35D-41F2FB8B7C90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981} = {D2D42CC4-5199-492C-BABB-711D34FF67D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {162F8D76-A06C-4ABA-B026-2156C62B487F}
