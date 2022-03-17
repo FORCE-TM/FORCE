@@ -5,7 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FORCE", "src\FORCE\FORCE.csproj", "{1CF3137E-1951-4C68-B35D-41F2FB8B7C90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FORCE.Core", "src\FORCE.Core\FORCE.Core.csproj", "{A0FCDAEE-2966-47D9-B315-A891DC2E4F9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FORCE.Core", "src\FORCE.Core\FORCE.Core.csproj", "{A0FCDAEE-2966-47D9-B315-A891DC2E4F9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{D2D42CC4-5199-492C-BABB-711D34FF67D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GbxRemote.Net", "src\submodules\GbxRemote.Net\GbxRemote.Net\GbxRemote.Net.csproj", "{01706935-8BDF-403D-91AA-9157B09F5904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +25,16 @@ Global
 		{A0FCDAEE-2966-47D9-B315-A891DC2E4F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0FCDAEE-2966-47D9-B315-A891DC2E4F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0FCDAEE-2966-47D9-B315-A891DC2E4F9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01706935-8BDF-403D-91AA-9157B09F5904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01706935-8BDF-403D-91AA-9157B09F5904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01706935-8BDF-403D-91AA-9157B09F5904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01706935-8BDF-403D-91AA-9157B09F5904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01706935-8BDF-403D-91AA-9157B09F5904} = {D2D42CC4-5199-492C-BABB-711D34FF67D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {162F8D76-A06C-4ABA-B026-2156C62B487F}

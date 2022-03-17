@@ -6,4 +6,8 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\submodules\GbxRemote.Net\GbxRemote.Net\GbxRemote.Net.csproj" />
+  </ItemGroup>
+
 </Project>

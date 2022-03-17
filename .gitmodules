@@ -1,0 +1,4 @@
+[submodule "src/submodules/GbxRemote.Net"]
+	path = src/submodules/GbxRemote.Net
+	url = https://github.com/FORCE-TM/GbxRemote.Net
+	branch = improved-tmf-support
