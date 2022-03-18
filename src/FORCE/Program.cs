@@ -11,7 +11,7 @@ internal static class Program
 
         Console.WriteLine("Connecting...");
 
-        if (!await force.Client.ConnectAsync())
+        if (!await force.Server.ConnectAsync())
         {
             Console.WriteLine("Could not establish a connection to the server.");
             return;
@@ -21,7 +21,7 @@ internal static class Program
 
         try
         {
-            await force.Client.AuthenticateAsync("SuperAdmin", "SuperAdmin");
+            await force.Server.AuthenticateAsync("SuperAdmin", "SuperAdmin");
         }
         catch (Exception ex)
         {
@@ -31,7 +31,7 @@ internal static class Program
 
         Console.WriteLine("Successfully connected and authenticated!" + Environment.NewLine);
 
-        PlayerInfo[] playerList = await force.Client.GetPlayerListAsync();
+        PlayerInfo[] playerList = await force.Server.GetPlayerListAsync();
         Console.WriteLine($"Online players: {playerList.Length}");
 
         foreach (var player in playerList)
@@ -39,13 +39,13 @@ internal static class Program
             Console.WriteLine($"   - [{player.Login}] {player.NickName} (Spectator: {player.SpectatorStatus.Spectator})");
         }
 
-        await force.Client.EnableCallbacksAsync();
-        
+        await force.Server.EnableCallbacksAsync();
+
         Console.WriteLine(Environment.NewLine + "Chat:");
 
-        force.Client.OnPlayerChat += async (playerUid, login, text, isRegisteredCmd) =>
+        force.Server.OnPlayerChat += async (playerUid, login, text, isRegisteredCmd) =>
         {
-            var player = await force.Client.GetPlayerInfoAsync(login);
+            var player = await force.Server.GetPlayerInfoAsync(login);
 
             Console.WriteLine($"   [{player.NickName}] {text}");
         };
