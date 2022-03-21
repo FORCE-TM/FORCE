@@ -43,11 +43,14 @@ internal static class Program
 
         Console.WriteLine(Environment.NewLine + "Chat:");
 
-        force.Server.OnPlayerChat += async (playerUid, login, text, isRegisteredCmd) =>
+        force.Server.OnPlayerChat += async (playerUid, login, text, _) =>
         {
-            var player = await force.Server.GetPlayerInfoAsync(login);
+            if (playerUid != 0) // server
+            {
+                var player = await force.Server.GetPlayerInfoAsync(login);
 
-            Console.WriteLine($"   [{player.NickName}] {text}");
+                Console.WriteLine($"   [{player.NickName}] {text}");
+            }
         };
 
         await Task.Delay(-1);

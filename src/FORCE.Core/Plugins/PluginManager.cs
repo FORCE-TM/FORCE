@@ -7,14 +7,14 @@ internal class PluginManager
 {
     public List<PluginAssembly> PluginAssemblies { get; } = new();
 
-    private readonly ForceController _force;
+    internal readonly ForceController Force;
 
     public PluginManager(ForceController force)
     {
-        _force = force;
+        Force = force;
     }
 
-    public bool LoadPlugins(PluginAssembly pluginAssembly)
+    public bool LoadPluginAssembly(PluginAssembly pluginAssembly)
     {
         if (pluginAssembly.Plugins.Count == 0)
             return false;
@@ -23,26 +23,28 @@ internal class PluginManager
 
         foreach (var plugin in pluginAssembly.Plugins)
         {
-            plugin.Value.OnPluginLoadAsync(_force);
+            plugin.MainInstance.OnPluginLoadAsync();
         }
 
         return true;
     }
 
-    public bool UnloadPlugins(PluginAssembly pluginAssembly)
+    public bool UnloadPluginAssembly(PluginAssembly pluginAssembly)
     {
         bool removed = PluginAssemblies.Remove(pluginAssembly);
 
         if (removed)
         {
-            pluginAssembly.AssemblyLoadContext.Unload();
-            pluginAssembly.RemoveAllEventHandlers(_force.Server);
-
             foreach (var plugin in pluginAssembly.Plugins)
             {
                 try
                 {
-                    plugin.Value.OnPluginUnloadAsync(_force);
+                    pluginAssembly.AssemblyLoadContext.Unload();
+
+                    plugin.MainInstance.OnPluginUnloadAsync();
+
+                    // After OnPluginUnloadAsync to make sure the plugin can not register new events
+                    pluginAssembly.RemoveAllEventHandlers(Force.Server);
                 }
                 catch (NotImplementedException)
                 {
@@ -54,16 +56,16 @@ internal class PluginManager
         return removed;
     }
 
-    public bool ReloadPlugins(PluginAssembly pluginAssembly)
+    public bool ReloadPluginAssembly(PluginAssembly pluginAssembly)
     {
-        bool unloaded = UnloadPlugins(pluginAssembly);
+        bool unloaded = UnloadPluginAssembly(pluginAssembly);
 
         if (unloaded)
         {
-            UnloadPlugins(pluginAssembly);
+            UnloadPluginAssembly(pluginAssembly);
 
-            pluginAssembly = GetPluginsFromAssembly(pluginAssembly.Assembly.Location);
-            LoadPlugins(pluginAssembly);
+            pluginAssembly = GetPluginAssemblyFromPath(pluginAssembly.Assembly.Location);
+            LoadPluginAssembly(pluginAssembly);
         }
 
         return unloaded;
@@ -74,11 +76,11 @@ internal class PluginManager
         return Directory.GetFiles(directory.FullName, "*.dll", searchOption);
     }
 
-    public static PluginAssembly GetPluginsFromAssembly(string assemblyPath)
+    public PluginAssembly GetPluginAssemblyFromPath(string assemblyPath)
     {
         var assemblyLoadContext = new AssemblyLoadContext(null, isCollectible: true);
         var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyPath);
 
-        return new PluginAssembly(assemblyLoadContext, assembly);
+        return new PluginAssembly(this, assemblyLoadContext, assembly);
     }
 }

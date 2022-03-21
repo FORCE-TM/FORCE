@@ -17,13 +17,20 @@ public class ForceController
 
         string[] pluginFiles = PluginManager.GetPluginFilesFromDirectory(new DirectoryInfo("Plugins"));
 
-        var pluginAssembles = pluginFiles.Select(PluginManager.GetPluginsFromAssembly);
+        var pluginAssemblies = pluginFiles.Select(PluginManager.GetPluginAssemblyFromPath);
 
-        pluginAssembles.ForEach(p => PluginManager.LoadPlugins(p));
+        pluginAssemblies.ForEach(p => PluginManager.LoadPluginAssembly(p));
 
-        foreach (var plugin in PluginManager.PluginAssemblies.SelectMany(p => p.Plugins.Keys))
+        foreach (var plugin in PluginManager.PluginAssemblies.SelectMany(p => p.Plugins))
         {
             Console.WriteLine($"Loaded {plugin.Name} v{plugin.Version} by {plugin.Author}");
+
+            foreach (var command in plugin.Commands)
+            {
+                Console.WriteLine($"   /{command.Group?.Prefix.Insert(command.Group.Prefix.Length, " ")}{command.Name}");
+            }
+
+            Console.WriteLine();
         }
     }
 }
