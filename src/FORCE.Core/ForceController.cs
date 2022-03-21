@@ -27,7 +27,9 @@ public class ForceController
 
             foreach (var command in plugin.Commands)
             {
-                Console.WriteLine($"   /{command.Group?.Prefix.Insert(command.Group.Prefix.Length, " ")}{command.Name}");
+                Console.WriteLine($"   /{command.Group?.Prefix.Insert(command.Group.Prefix.Length, " ")}" +
+                                  $"{command.Name}" +
+                                  $" {string.Join(' ', command.Parameters.Select(p => (p.HasDefaultValue ? '[' : '<') + p.Name + (p.HasDefaultValue ? ($"={p.DefaultValue}" + ']') : '>')))}");
             }
 
             Console.WriteLine();

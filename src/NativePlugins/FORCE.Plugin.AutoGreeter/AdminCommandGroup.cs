@@ -8,8 +8,11 @@ namespace FORCE.Plugin.AutoGreeter;
 public class AdminCommandGroup : ForceCommand
 {
     [Command("message"), Alias("msg")]
-    [Summary("Set a new welcome message (Use %player% for the player nickname)")]
-    public async Task MessageAsync(string message)
+    [Summary("Set a new welcome message")]
+    public async Task MessageAsync(
+        [Remainder]
+        [Summary("The new welcome message (Use %player% for the player nickname)")]
+        string newMessage)
     {
         // TODO
     }

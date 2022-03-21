@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Loader;
-using FORCE.Core.Plugins.Models;
+using FORCE.Core.Plugins.Commands;
 
 namespace FORCE.Core.Plugins;
 
@@ -7,11 +7,14 @@ internal class PluginManager
 {
     public List<PluginAssembly> PluginAssemblies { get; } = new();
 
-    internal readonly ForceController Force;
+    public ForceController Force { get; }
+    public CommandHandler CommandHandler { get; }
 
     public PluginManager(ForceController force)
     {
         Force = force;
+        CommandHandler = new CommandHandler(this);
+        CommandHandler.StartListening();
     }
 
     public bool LoadPluginAssembly(PluginAssembly pluginAssembly)

@@ -1,33 +1,58 @@
-﻿using FORCE.Core.Plugins.Attributes;
+﻿using System.Reflection;
+using FORCE.Core.Extensions;
+using FORCE.Core.Plugins.Attributes;
 using FORCE.Core.Plugins.Commands.Attributes;
 
 namespace FORCE.Core.Plugins.Commands.Models;
 
 internal class CommandInfo
 {
-    public string Name { get; }
-    public string[] Aliases { get; }
-    public bool Admin { get; }
-    public string Summary { get; }
+    public string Name { get; private set; }
+    public string[] Aliases { get; private set; }
+    public string[] AllNames { get; private set; }
+    public bool Admin { get; private set; }
+    public string Summary { get; private set; }
 
-    public string[] AllNames { get; }
+    public List<CommandParameterInfo> Parameters { get; private set; }
 
     public CommandGroupInfo Group { get; private set; }
     public bool BelongsToGroup { get; private set; }
 
-    public CommandInfo(CommandAttribute command, AliasAttribute alias, SummaryAttribute summary)
+    private CommandInfo()
     {
-        Name = command.Name;
-        Aliases = alias?.Names ?? Array.Empty<string>();
-        Admin = command.Admin;
-        Summary = summary?.Text;
+    }
 
-        AllNames = new[] { Name }.Concat(Aliases).ToArray();
+    public static bool TryGetFromMethod(MethodInfo method, out CommandInfo command)
+    {
+        command = new();
+
+        if (!method.TryGetCustomAttribute<CommandAttribute>(out var commandAttribute))
+            return false;
+
+        method.TryGetCustomAttribute<AliasAttribute>(out var aliasAttribute);
+        method.TryGetCustomAttribute<SummaryAttribute>(out var summaryAttribute);
+
+        command.Name = commandAttribute.Name;
+        command.Aliases = aliasAttribute?.Names ?? Array.Empty<string>();
+        command.AllNames = new[] { command.Name }.Concat(command.Aliases).ToArray();
+        command.Admin = commandAttribute.Admin;
+        command.Summary = summaryAttribute?.Text;
+
+        command.Parameters = new List<CommandParameterInfo>();
+            
+        foreach (var parameterInfo in method.GetParameters())
+        {
+            var commandParameter = new CommandParameterInfo(parameterInfo);
+
+            command.Parameters.Add(commandParameter);
+        }
+
+        return true;
     }
 
     public void SetGroup(CommandGroupInfo group)
     {
         Group = group;
-        BelongsToGroup = true;
+        BelongsToGroup = group != null;
     }
 }

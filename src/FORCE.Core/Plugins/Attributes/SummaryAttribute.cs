@@ -1,6 +1,6 @@
 ﻿namespace FORCE.Core.Plugins.Attributes;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Parameter)]
 public class SummaryAttribute : Attribute
 {
     public string Text { get; }

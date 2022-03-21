@@ -4,8 +4,13 @@ namespace FORCE.Core.Extensions;
 
 internal static class TypeExtensions
 {
-    public static bool TryGetCustomAttribute<T>(this MemberInfo type, out T attribute) where T : Attribute
+    public static bool TryGetCustomAttribute<T>(this MemberInfo element, out T attribute) where T : Attribute
     {
-        return (attribute = type.GetCustomAttribute<T>()) != null;
+        return (attribute = element.GetCustomAttribute<T>()) != null;
+    }
+
+    public static bool TryGetCustomAttribute<T>(this ParameterInfo element, out T attribute) where T : Attribute
+    {
+        return (attribute = element.GetCustomAttribute<T>()) != null;
     }
 }

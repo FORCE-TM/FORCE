@@ -10,11 +10,11 @@ namespace FORCE.Core.Plugins;
 
 internal class PluginBuilder
 {
-    private static readonly Type PluginBaseType = typeof(ForcePlugin);
+    public static readonly Type PluginBaseType = typeof(ForcePlugin);
 
-    internal PluginManager PluginManager { get; }
-    internal Module Module { get; }
-    internal Type PluginClass { get; }
+    public PluginManager PluginManager { get; }
+    public Module Module { get; }
+    public Type PluginClass { get; }
 
     private readonly PluginAttribute _pluginAttribute;
     private readonly SummaryAttribute _summaryAttribute;
