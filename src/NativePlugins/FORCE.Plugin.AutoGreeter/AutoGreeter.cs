@@ -19,7 +19,7 @@ public class AutoGreeter : ForcePlugin
         await Server.ChatSendServerMessageAsync("byebye");
     }
 
-    [Command("greet"), Alias("hey", "hi", "hello")]
+    [Command("greet", "hey", "hi", "hello")]
     [Summary(@"Say ""Hey"" to a player")]
     public async Task GreetCommandAsync(string login)
     {

@@ -51,7 +51,7 @@ internal class CommandHandler
     {
         var allCommands = _pluginManager.PluginAssemblies.SelectMany(a => a.Plugins).SelectMany(p => p.Commands);
 
-        var nameMatchCommands = allCommands.Where(c => c.AllNames.Contains(cmdName, StringComparer.OrdinalIgnoreCase)).ToList();
+        var nameMatchCommands = allCommands.Where(c => c.Names.Contains(cmdName, StringComparer.OrdinalIgnoreCase)).ToList();
 
         if (nameMatchCommands.Count == 0)
         {

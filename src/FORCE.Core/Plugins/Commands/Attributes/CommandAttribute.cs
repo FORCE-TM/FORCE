@@ -3,12 +3,10 @@
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class CommandAttribute : Attribute
 {
-    public string Name { get; }
-    public bool Admin { get; }
+    public string[] Names { get; }
 
-    public CommandAttribute(string name, bool admin = false)
+    public CommandAttribute(params string[] names)
     {
-        Name = name;
-        Admin = admin;
+        Names = names;
     }
 }

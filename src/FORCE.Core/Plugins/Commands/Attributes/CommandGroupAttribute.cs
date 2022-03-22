@@ -3,12 +3,10 @@
 [AttributeUsage(AttributeTargets.Class)]
 public class CommandGroupAttribute : Attribute
 {
-    public string Prefix { get; }
-    public bool Admin { get; }
+    public string[] Prefixes { get; }
 
-    public CommandGroupAttribute(string prefix, bool admin)
+    public CommandGroupAttribute(params string[] prefixes)
     {
-        Prefix = prefix;
-        Admin = admin;
+        Prefixes = prefixes;
     }
 }

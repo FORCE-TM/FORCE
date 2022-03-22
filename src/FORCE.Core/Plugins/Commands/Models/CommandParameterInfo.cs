@@ -29,8 +29,6 @@ internal class CommandParameterInfo
             IsRemainder = true;
 
         if (Type != typeof(string))
-        {
             throw new($"At the moment, only parameters of type {typeof(string)} are supported in command methods.");
-        }
     }
 }
