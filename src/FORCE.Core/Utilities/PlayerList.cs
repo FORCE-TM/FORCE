@@ -4,7 +4,7 @@ using GbxRemoteNet.XmlRpc;
 using GbxRemoteNet.XmlRpc.ExtraTypes;
 using GbxRemoteNet.XmlRpc.Types;
 
-namespace FORCE.Core;
+namespace FORCE.Core.Utilities;
 
 public class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
 {
