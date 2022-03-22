@@ -30,12 +30,11 @@ internal static class Program
 
         Console.WriteLine("Successfully connected and authenticated!" + Environment.NewLine);
 
-        PlayerInfo[] playerList = await force.Server.GetPlayerListAsync();
-        Console.WriteLine($"Online players: {playerList.Length}");
+        Console.WriteLine($"Online players: {force.Server.Players.Count}");
 
-        foreach (var player in playerList)
+        foreach (var player in force.Server.Players)
         {
-            Console.WriteLine($"   - [{player.Login}] {player.NickName} (Spectator: {player.SpectatorStatus.Spectator})");
+            Console.WriteLine($"   - [{player.Login}] {player.NickName} (Spectator: {player.IsSpectator})");
         }
 
         await force.Server.EnableCallbacksAsync();

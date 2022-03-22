@@ -4,11 +4,21 @@ namespace FORCE.Core;
 
 public class TmServer : GbxRemoteClient
 {
-    internal TmServer(string host, int port) : base(host, port)
-    {
-    }
+    public PlayerList Players { get; private set; }
 
-    internal TmServer(string host, int port, GbxRemoteClientOptions options) : base(host, port, options)
+    private static readonly GbxRemoteClientOptions _defaultGbxRemoteClientOptions = new()
     {
+        ConnectionRetries = 2,
+        ConnectionRetryTimeout = TimeSpan.FromSeconds(1)
+    };
+
+    internal TmServer(string host, int port) : base(host, port, _defaultGbxRemoteClientOptions)
+    {
+        OnConnected += () =>
+        {
+            Players = new(this);
+
+            return Task.CompletedTask;
+        };
     }
 }
