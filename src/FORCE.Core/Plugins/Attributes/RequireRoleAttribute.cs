@@ -1,6 +1,6 @@
 ﻿using FORCE.Core.Enums;
 
-namespace FORCE.Core.Plugins.Commands.Attributes;
+namespace FORCE.Core.Plugins.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RequireRoleAttribute : Attribute

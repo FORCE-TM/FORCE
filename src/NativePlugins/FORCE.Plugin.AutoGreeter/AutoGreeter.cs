@@ -8,31 +8,40 @@ namespace FORCE.Plugin.AutoGreeter;
 [Summary(@"Automatically says ""Hey"" when a player connects")]
 public class AutoGreeter : ForcePlugin
 {
-    public override async Task OnPluginLoadAsync()
+    private string _lastLoggedInPlayer;
+
+    public override Task OnPluginLoadAsync()
     {
-        Server.OnPlayerConnect += async (login, _) => await GreetCommandAsync(login);
+        #pragma warning disable CS1998
+
+        Server.OnPlayerConnect += async (login, _)
+            => _lastLoggedInPlayer = login;
+
+        Server.OnPlayerConnect += async (login, _)
+            => await GreetCommandAsync(login);
+
+        return Task.CompletedTask;
     }
 
-    public override async Task OnPluginUnloadAsync()
+    [Command("greet", "hey", "hi", "hello", "yo")]
+    [Summary(@"Say ""Hey"" to the specified player (or the last who logged in)")]
+    public async Task GreetCommandAsync(
+        [Summary("Login of the player to greet (if not specified, it will greet the last player who logged in)")]
+        string login = null)
     {
-        // testing purposes
-        await Server.ChatSendServerMessageAsync("byebye");
-    }
+        var player = Server.Players[login ?? _lastLoggedInPlayer];
 
-    [Command("greet", "hey", "hi", "hello")]
-    [Summary(@"Say ""Hey"" to a player")]
-    public async Task GreetCommandAsync(string login)
-    {
-        // TODO: Return error if player does not exist
-        var player = await Server.GetPlayerInfoAsync(login);
-
-        if (CommandContext == null) // Means it was called from the event
+        if (player == null)
         {
+            if (Command.Author != null)
+                await Command.ReplyAsync($"$G> $F00Player $FFF{login} $F00not found.");
+
+            return;
+        }
+
+        if (Command == null) // Means it was called from the event
             await Server.ChatSendServerMessageAsync($"$G>> Hey $FFF{player.NickName}$Z$G$S! Enjoy your stay (:");
-        }
         else
-        {
-            await Server.ChatSendServerMessageAsync($"$G[{CommandContext.Author.NickName}$Z$G$S] Hey $FFF{player.NickName}$Z$G$S!");
-        }
+            await Server.ChatSendServerMessageAsync($"$G[{Command.Author.NickName}$Z$G$S] Hey $FFF{player.NickName}$Z$G$S!");
     }
 }

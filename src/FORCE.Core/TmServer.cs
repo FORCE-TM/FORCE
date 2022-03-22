@@ -7,13 +7,13 @@ public class TmServer : GbxRemoteClient
 {
     public PlayerList Players { get; private set; }
 
-    private static readonly GbxRemoteClientOptions _defaultGbxRemoteClientOptions = new()
+    private static readonly GbxRemoteClientOptions _defaultOptions = new()
     {
         ConnectionRetries = 2,
         ConnectionRetryTimeout = TimeSpan.FromSeconds(1)
     };
 
-    internal TmServer(string host, int port) : base(host, port, _defaultGbxRemoteClientOptions)
+    internal TmServer(string host, int port) : base(host, port, _defaultOptions)
     {
         OnConnected += () =>
         {

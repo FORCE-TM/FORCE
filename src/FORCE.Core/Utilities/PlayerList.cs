@@ -50,9 +50,11 @@ public class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
         _players.Add(player);
     }
 
-    private async Task HandlePlayerDisconnectAsync(string login)
+    private Task HandlePlayerDisconnectAsync(string login)
     {
         _players.RemoveAll(p => p.Login == login);
+
+        return Task.CompletedTask;
     }
 
     public PlayerDetailedInfo this[int uid]

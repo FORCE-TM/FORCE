@@ -7,7 +7,7 @@ namespace FORCE.Plugin.AutoGreeter;
 
 [CommandGroup("autogreeter", "autogreet", "greeter")]
 [RequireRole(PlayerRole.Admin)]
-public class AdminCommandGroup : ForceCommand
+public class AdminCommandGroup : CommandContext
 {
     [Command("message", "msg")]
     [Summary("Set a new welcome message")]

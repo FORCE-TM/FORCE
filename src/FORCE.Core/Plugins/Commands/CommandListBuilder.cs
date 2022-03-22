@@ -5,7 +5,7 @@ namespace FORCE.Core.Plugins.Commands;
 
 internal class CommandListBuilder
 {
-    public static readonly Type CommandBaseType = typeof(ForceCommand);
+    public static readonly Type CommandBaseType = typeof(CommandContext);
 
     private readonly PluginBuilder _pluginBuilder;
 
