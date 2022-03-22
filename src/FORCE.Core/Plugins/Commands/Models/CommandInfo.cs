@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 using FORCE.Core.Enums;
 using FORCE.Core.Extensions;
 using FORCE.Core.Plugins.Attributes;
@@ -61,5 +62,51 @@ internal class CommandInfo
     {
         Group = group;
         IsInGroup = group != null;
+    }
+
+    public override string ToString()
+    {
+        var commandBuilder = new StringBuilder();
+
+        commandBuilder.Append('/');
+
+        if (IsInGroup)
+        {
+            commandBuilder.Append(Group.Prefix);
+            commandBuilder.Append(' ');
+        }
+
+        commandBuilder.Append(Name);
+
+        foreach (var parameter in Parameters)
+        {
+            commandBuilder.Append(' ');
+            commandBuilder.Append(parameter.HasDefaultValue ? '[' : '<');
+            commandBuilder.Append(parameter.Name);
+
+            if (parameter.HasDefaultValue && parameter.DefaultValue is not null)
+            {
+                commandBuilder.Append('=');
+
+                if (parameter.DefaultValue is string)
+                {
+                    commandBuilder.Append('"');
+                    commandBuilder.Append(parameter.DefaultValue);
+                    commandBuilder.Append('"');
+                }
+                else
+                {
+                    commandBuilder.Append(parameter.DefaultValue);
+                }
+            }
+            else if (parameter.IsRemainder)
+            {
+                commandBuilder.Append("...");
+            }
+
+            commandBuilder.Append(parameter.HasDefaultValue ? ']' : '>');
+        }
+
+        return commandBuilder.ToString();
     }
 }

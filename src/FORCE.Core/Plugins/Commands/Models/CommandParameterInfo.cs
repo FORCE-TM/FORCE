@@ -26,7 +26,12 @@ internal class CommandParameterInfo
             Summary = summaryAttribute.Text;
 
         if (parameterInfo.TryGetCustomAttribute<RemainderAttribute>(out _))
+        {
+            if (Type != typeof(string))
+                throw new($"{nameof(RemainderAttribute)} can only be used on parameters of type {typeof(string)}");
+
             IsRemainder = true;
+        }
 
         if (Type != typeof(string))
             throw new($"At the moment, only parameters of type {typeof(string)} are supported in command methods.");
