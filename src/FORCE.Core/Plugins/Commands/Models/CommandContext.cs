@@ -1,4 +1,4 @@
-﻿using GbxRemoteNet.Structs;
+﻿using GbxRemoteNet;
 
 namespace FORCE.Core.Plugins.Commands.Models;
 
