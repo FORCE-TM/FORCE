@@ -16,9 +16,7 @@ public class ForceController
         PluginManager = new(this);
 
         string[] pluginFiles = PluginManager.GetPluginFilesFromDirectory(new DirectoryInfo("Plugins"));
-
         var pluginAssemblies = pluginFiles.Select(PluginManager.GetPluginAssemblyFromPath);
-
         pluginAssemblies.ForEach(p => PluginManager.LoadPluginAssembly(p));
 
         foreach (var plugin in PluginManager.PluginAssemblies.SelectMany(p => p.Plugins))

@@ -7,13 +7,13 @@ namespace FORCE.Plugin.AutoGreeter;
 
 [CommandGroup("autogreeter", "autogreet", "greeter")]
 [RequireRole(PlayerRole.Admin)]
-public class AdminCommandGroup : CommandContext
+public class AdminCommands : CommandContext
 {
     [Command("message", "msg")]
     [Summary("Set a new welcome message")]
     public async Task MessageAsync(
         [Remainder]
-        [Summary("The new welcome message (Use %player% for the player nickname)")]
+        [Summary("The new auto welcome message (Use %player% for the player nickname)")]
         string newMessage)
     {
         // TODO

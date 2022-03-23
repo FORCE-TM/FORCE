@@ -45,6 +45,7 @@ internal class PluginBuilder
     // (without attribute checks)
     private bool IsValidPluginClass(Type type)
         => PluginBaseType.IsAssignableFrom(type) &&
+           !CommandListBuilder.CommandBaseType.IsAssignableFrom(type) &&
            type.IsClass &&
            type.IsPublic &&
            !type.IsAbstract &&

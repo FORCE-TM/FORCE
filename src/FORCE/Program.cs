@@ -12,7 +12,7 @@ internal static class Program
 
         if (!await force.Server.ConnectAsync())
         {
-            Console.WriteLine("Could not establish a connection to the server.");
+            Console.WriteLine("Could not establish connection to the server.");
             return;
         }
 

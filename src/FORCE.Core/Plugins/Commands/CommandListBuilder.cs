@@ -42,7 +42,6 @@ internal class CommandListBuilder
 
     private bool IsValidCommandGroupClass(Type type)
         => CommandBaseType.IsAssignableFrom(type) &&
-           !PluginBuilder.PluginBaseType.IsAssignableFrom(type) &&
            type.IsClass &&
            type.IsPublic &&
            !type.IsAbstract &&

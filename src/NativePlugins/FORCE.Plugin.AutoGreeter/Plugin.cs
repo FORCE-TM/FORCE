@@ -6,14 +6,14 @@ namespace FORCE.Plugin.AutoGreeter;
 
 [Plugin("AutoGreeter", "1.0.0", "Laiteux")]
 [Summary(@"Automatically says ""Hey"" when a player connects")]
-public class AutoGreeter : ForcePlugin
+public class Plugin : ForcePlugin
 {
     private string _lastLoggedInPlayer;
 
     public override Task OnPluginLoadAsync()
     {
         #pragma warning disable CS1998
-
+        
         Server.OnPlayerConnect += async (login, _)
             => _lastLoggedInPlayer = login;
 

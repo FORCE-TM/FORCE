@@ -17,12 +17,11 @@ public abstract class ForcePlugin
         Force = force;
     }
 
-    internal void SetCommandContext(CommandContext context)
+    internal void SetCommandContext(CommandContext commandContext)
     {
         if (Force == null)
-            throw new Exception($"{nameof(UseTheForce)} must be called first.");
+            throw new($"{nameof(UseTheForce)} must be called first.");
 
-        Command = context;
-        Command.SetTmServer(Force.Server);
+        Command = commandContext;
     }
 }
