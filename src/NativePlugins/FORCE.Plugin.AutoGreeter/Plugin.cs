@@ -34,7 +34,7 @@ public class Plugin : ForcePlugin
         if (player == null)
         {
             if (Command?.Author != null)
-                await Command.ReplyAsync($"$G> $F00Player $FFF{login} $F00not found.");
+                await Command.ReplyAuthorAsync($"$F00Player $FFF{login} $F00not found.");
 
             return;
         }

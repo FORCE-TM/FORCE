@@ -34,7 +34,7 @@ public class TmServer : GbxRemoteClient
         else if (@delegate is PlayerDisconnectAction)
             await Players.HandlePlayerDisconnectAsync((string)args[0]);
 
-        // No need to check for null, as all GbxRemoteClient events are null-safe:
+        // No need to check for null, as all GbxRemoteClient events are null-safe by default:
         // https://github.com/FORCE-TM/GbxRemote.Net/commit/5e07a17243e91d016b75175cbefae10390d40cef
         @delegate.DynamicInvoke(args);
     }
