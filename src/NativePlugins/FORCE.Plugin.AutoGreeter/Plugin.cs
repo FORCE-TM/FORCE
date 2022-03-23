@@ -13,7 +13,7 @@ public class Plugin : ForcePlugin
     public override Task OnPluginLoadAsync()
     {
         #pragma warning disable CS1998
-        
+
         Server.OnPlayerConnect += async (login, _)
             => _lastLoggedInPlayer = login;
 
@@ -33,7 +33,7 @@ public class Plugin : ForcePlugin
 
         if (player == null)
         {
-            if (Command.Author != null)
+            if (Command?.Author != null)
                 await Command.ReplyAsync($"$G> $F00Player $FFF{login} $F00not found.");
 
             return;

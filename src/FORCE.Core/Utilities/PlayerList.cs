@@ -16,8 +16,6 @@ public class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
         _players = new();
 
         _tmServer = tmServer;
-        _tmServer.OnPlayerConnect += HandlePlayerConnectAsync;
-        _tmServer.OnPlayerDisconnect += HandlePlayerDisconnectAsync;
 
         LoadOnlinePlayersAsync().GetAwaiter().GetResult();
     }
@@ -43,14 +41,14 @@ public class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
         }
     }
 
-    private async Task HandlePlayerConnectAsync(string login, bool _)
+    internal async Task HandlePlayerConnectAsync(string login)
     {
         var player = await _tmServer.GetDetailedPlayerInfoAsync(login);
 
         _players.Add(player);
     }
 
-    private Task HandlePlayerDisconnectAsync(string login)
+    internal Task HandlePlayerDisconnectAsync(string login)
     {
         _players.RemoveAll(p => p.Login == login);
 
