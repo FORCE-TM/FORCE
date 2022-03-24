@@ -18,14 +18,14 @@ public class Plugin : ForcePlugin
             => _lastLoggedInPlayer = login;
 
         Server.OnPlayerConnect += async (login, _)
-            => await GreetCommandAsync(login);
+            => await GreetAsync(login);
 
         return Task.CompletedTask;
     }
 
     [Command("greet", "hey", "hi", "hello", "yo")]
     [Summary(@"Say ""Hey"" to the specified player (or the last who logged in)")]
-    public async Task GreetCommandAsync(
+    public async Task GreetAsync(
         [Summary("Login of the player to greet (if not specified, it will greet the last player who logged in)")]
         string login = null)
     {
@@ -40,8 +40,8 @@ public class Plugin : ForcePlugin
         }
 
         if (Command == null) // Means it was called from the event
-            await Server.ChatSendServerMessageAsync($"$G>> Hey $FFF{player.NickName}$Z$G$S! Enjoy your stay (:");
+            await Server.ChatSendServerMessageAsync($"$G>> Hey $FFF{player.NickName}$Z$S! Enjoy your stay (:");
         else
-            await Server.ChatSendServerMessageAsync($"$G[{Command.Author.NickName}$Z$G$S] Hey $FFF{player.NickName}$Z$G$S!");
+            await Server.ChatSendServerMessageAsync($"$G[{Command.Author.NickName}$Z$S] Hey $FFF{player.NickName}$Z$S!");
     }
 }

@@ -1,18 +1,22 @@
 ﻿using System.Runtime.Loader;
 using FORCE.Core.Plugins.Commands;
+using FORCE.Core.Plugins.Models;
 
 namespace FORCE.Core.Plugins;
 
 internal class PluginManager
 {
-    public List<PluginAssembly> PluginAssemblies { get; } = new();
+    public event Action<PluginInfo> OnPluginLoaded;
+    public event Action<PluginInfo> OnPluginUnloaded;
 
     public ForceController Force { get; }
+    public List<PluginAssembly> PluginAssemblies { get; }
     public CommandHandler CommandHandler { get; }
 
     public PluginManager(ForceController force)
     {
         Force = force;
+        PluginAssemblies = new();
         CommandHandler = new CommandHandler(this);
         CommandHandler.StartListening();
     }
@@ -27,12 +31,13 @@ internal class PluginManager
         foreach (var plugin in pluginAssembly.Plugins)
         {
             plugin.MainInstance.OnPluginLoadAsync();
+            OnPluginLoaded?.Invoke(plugin);
         }
 
         return true;
     }
 
-    public bool UnloadPluginAssembly(PluginAssembly pluginAssembly)
+    public bool UnloadPluginAssembly(PluginAssembly pluginAssembly, bool reload = false)
     {
         bool removed = PluginAssemblies.Remove(pluginAssembly);
 
@@ -40,19 +45,24 @@ internal class PluginManager
         {
             foreach (var plugin in pluginAssembly.Plugins)
             {
-                try
-                {
-                    pluginAssembly.AssemblyLoadContext.Unload();
+                pluginAssembly.AssemblyLoadContext.Unload();
 
-                    plugin.MainInstance.OnPluginUnloadAsync();
-
-                    // After OnPluginUnloadAsync to make sure the plugin can not register new events
-                    pluginAssembly.RemoveAllEventHandlers(Force.Server);
-                }
-                catch (NotImplementedException)
+                if (!reload)
                 {
-                    // ignored
+                    try
+                    {
+                        plugin.MainInstance.OnPluginUnloadAsync();
+                    }
+                    catch (NotImplementedException)
+                    {
+                        // ignored
+                    }
+
+                    OnPluginUnloaded?.Invoke(plugin);
                 }
+
+                // Only after OnPluginUnloadAsync, to make sure the plugin can not register any new event
+                pluginAssembly.RemoveAllEventHandlers(Force.Server);
             }
         }
 
@@ -61,13 +71,12 @@ internal class PluginManager
 
     public bool ReloadPluginAssembly(PluginAssembly pluginAssembly)
     {
-        bool unloaded = UnloadPluginAssembly(pluginAssembly);
+        bool unloaded = UnloadPluginAssembly(pluginAssembly, true);
 
         if (unloaded)
         {
-            UnloadPluginAssembly(pluginAssembly);
-
             pluginAssembly = GetPluginAssemblyFromPath(pluginAssembly.Assembly.Location);
+
             LoadPluginAssembly(pluginAssembly);
         }
 

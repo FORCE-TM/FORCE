@@ -12,18 +12,15 @@ internal class PluginBuilder
 {
     public static readonly Type PluginBaseType = typeof(ForcePlugin);
 
-    public PluginManager PluginManager { get; }
-    public Module Module { get; }
     public Type PluginClass { get; }
 
+    private readonly PluginManager _pluginManager;
     private readonly PluginAttribute _pluginAttribute;
     private readonly SummaryAttribute _summaryAttribute;
 
     public PluginBuilder(Module module, PluginManager pluginManager)
     {
-        PluginManager = pluginManager;
-
-        Module = module;
+        _pluginManager = pluginManager;
 
         PluginClass = module.GetTypes().SingleOrDefault(IsValidPluginClass);
 
@@ -51,22 +48,30 @@ internal class PluginBuilder
            !type.IsAbstract &&
            !type.ContainsGenericParameters;
 
-    private Func<ForcePlugin> CreateInstanceFunc() => () =>
+    private Func<ForcePlugin> CreateInstanceFunc(PluginInfo plugin) => () =>
     {
         var instance = (ForcePlugin)Activator.CreateInstance(PluginClass);
 
-        instance.UseTheForce(PluginManager.Force);
+        instance.UseTheForce(_pluginManager.Force);
+        instance.SetPlugin(plugin);
 
         return instance;
     };
 
-    public PluginInfo Build() => new()
+    public PluginInfo Build()
     {
-        Name = _pluginAttribute.Name,
-        Version = _pluginAttribute.Version,
-        Author = _pluginAttribute.Author,
-        Summary = _summaryAttribute.Text,
-        NewInstanceFunc = CreateInstanceFunc(),
-        Commands = GetCommands().ToList()
-    };
+        var plugin = new PluginInfo()
+        {
+            Name = _pluginAttribute.Name,
+            Version = _pluginAttribute.Version,
+            Author = _pluginAttribute.Author,
+            Summary = _summaryAttribute.Text,
+            Class = PluginClass,
+            Commands = GetCommands().ToList()
+        };
+
+        plugin.NewInstanceFunc = CreateInstanceFunc(plugin);
+
+        return plugin;
+    }
 }

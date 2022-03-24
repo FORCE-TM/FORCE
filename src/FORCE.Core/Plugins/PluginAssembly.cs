@@ -6,15 +6,13 @@ namespace FORCE.Core.Plugins;
 
 internal class PluginAssembly
 {
-    public List<PluginInfo> Plugins { get; } = new();
-
-    public PluginManager PluginManager { get; }
+    public List<PluginInfo> Plugins { get; }
     public AssemblyLoadContext AssemblyLoadContext { get; }
     public Assembly Assembly { get; }
 
     public PluginAssembly(PluginManager pluginManager, AssemblyLoadContext assemblyLoadContext, Assembly assembly = null)
     {
-        PluginManager = pluginManager;
+        Plugins = new();
         AssemblyLoadContext = assemblyLoadContext;
         Assembly = assembly ?? assemblyLoadContext.Assemblies.Single();
 
@@ -22,13 +20,13 @@ internal class PluginAssembly
         {
             try
             {
-                var plugin = new PluginBuilder(module, PluginManager).Build();
+                var plugin = new PluginBuilder(module, pluginManager).Build();
 
                 Plugins.Add(plugin);
             }
             catch
             {
-                // ignored
+                // TODO: Handle better
             }
         }
     }

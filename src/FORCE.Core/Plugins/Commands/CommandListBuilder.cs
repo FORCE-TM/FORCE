@@ -52,6 +52,6 @@ internal class CommandListBuilder
            !method.ContainsGenericParameters;
 
     public IEnumerable<CommandInfo> Build()
-        => DiscoverCommandsFromModuleClasses(_pluginBuilder.Module)
+        => DiscoverCommandsFromModuleClasses(_pluginBuilder.PluginClass.Module)
             .Concat(DiscoverCommandsFromClassMethods(_pluginBuilder.PluginClass));
 }
