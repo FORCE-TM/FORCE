@@ -3,21 +3,21 @@ using FORCE.Core.Plugins.Commands.Models;
 
 namespace FORCE.Core.Plugins.Models;
 
-internal class PluginInfo
+public class PluginInfo
 {
     public string Name { get; set; }
     public string Version { get; set; }
     public string Author { get; set; }
     public string Summary { get; set; }
 
-    public List<CommandInfo> Commands { get; set; }
+    internal List<CommandInfo> Commands { get; set; }
 
-    public Type Class { get; set; }
+    internal Type Class { get; set; }
 
-    public ForcePlugin MainInstance { get; private set; }
+    internal ForcePlugin MainInstance { get; private set; }
 
     private Func<ForcePlugin> _newInstanceFunc;
-    public Func<ForcePlugin> NewInstanceFunc
+    internal Func<ForcePlugin> NewInstanceFunc
     {
         get => _newInstanceFunc;
         set

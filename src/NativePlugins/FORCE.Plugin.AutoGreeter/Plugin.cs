@@ -10,7 +10,7 @@ public class Plugin : ForcePlugin
 {
     private string _lastLoggedInPlayer;
 
-    public override Task OnPluginLoadAsync()
+    public override async Task OnPluginLoadAsync(bool reload)
     {
         #pragma warning disable CS1998
 
@@ -20,7 +20,8 @@ public class Plugin : ForcePlugin
         Server.OnPlayerConnect += async (login, _)
             => await GreetAsync(login);
 
-        return Task.CompletedTask;
+        if (!reload)
+            await Server.ChatSendServerMessageAsync($"$G>> Loaded $FFF{Plugin}");
     }
 
     [Command("greet", "hey", "hi", "hello", "yo")]

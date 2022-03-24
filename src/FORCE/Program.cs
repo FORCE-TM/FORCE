@@ -30,6 +30,8 @@ internal static class Program
 
         Console.WriteLine("Successfully connected and authenticated!" + Environment.NewLine);
 
+        force.LoadPlugins();
+
         Console.WriteLine($"Online players: {force.Server.Players.Count}");
 
         foreach (var player in force.Server.Players)

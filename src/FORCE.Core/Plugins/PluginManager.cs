@@ -6,8 +6,8 @@ namespace FORCE.Core.Plugins;
 
 internal class PluginManager
 {
-    public event Action<PluginInfo> OnPluginLoaded;
-    public event Action<PluginInfo> OnPluginUnloaded;
+    public event Action<PluginInfo, bool> OnPluginLoaded;
+    public event Action<PluginInfo, bool> OnPluginUnloaded;
 
     public ForceController Force { get; }
     public List<PluginAssembly> PluginAssemblies { get; }
@@ -18,10 +18,9 @@ internal class PluginManager
         Force = force;
         PluginAssemblies = new();
         CommandHandler = new CommandHandler(this);
-        CommandHandler.StartListening();
     }
 
-    public bool LoadPluginAssembly(PluginAssembly pluginAssembly)
+    public bool LoadPluginAssembly(PluginAssembly pluginAssembly, bool reload = false)
     {
         if (pluginAssembly.Plugins.Count == 0)
             return false;
@@ -30,8 +29,8 @@ internal class PluginManager
 
         foreach (var plugin in pluginAssembly.Plugins)
         {
-            plugin.MainInstance.OnPluginLoadAsync();
-            OnPluginLoaded?.Invoke(plugin);
+            plugin.MainInstance.OnPluginLoadAsync(reload);
+            OnPluginLoaded?.Invoke(plugin, reload);
         }
 
         return true;
@@ -47,21 +46,18 @@ internal class PluginManager
             {
                 pluginAssembly.AssemblyLoadContext.Unload();
 
-                if (!reload)
+                try
                 {
-                    try
-                    {
-                        plugin.MainInstance.OnPluginUnloadAsync();
-                    }
-                    catch (NotImplementedException)
-                    {
-                        // ignored
-                    }
-
-                    OnPluginUnloaded?.Invoke(plugin);
+                    plugin.MainInstance.OnPluginUnloadAsync(reload);
+                }
+                catch (NotImplementedException)
+                {
+                    // ignored
                 }
 
-                // Only after OnPluginUnloadAsync, to make sure the plugin can not register any new event
+                OnPluginUnloaded?.Invoke(plugin, reload);
+
+                // Only after OnPluginUnload, to make sure the plugin can not register any new event
                 pluginAssembly.RemoveAllEventHandlers(Force.Server);
             }
         }

@@ -14,18 +14,21 @@ public class ForceController
         Server = new TmServer(serverHost, serverPort);
 
         PluginManager = new(this);
+    }
 
+    public void LoadPlugins()
+    {
         string[] pluginFiles = PluginManager.GetPluginFilesFromDirectory(new DirectoryInfo("Plugins"));
         var pluginAssemblies = pluginFiles.Select(PluginManager.GetPluginAssemblyFromPath);
         pluginAssemblies.ForEach(p => PluginManager.LoadPluginAssembly(p));
 
         foreach (var plugin in PluginManager.PluginAssemblies.SelectMany(p => p.Plugins))
         {
-            Console.WriteLine($"Loaded {plugin.Name} v{plugin.Version} by {plugin.Author}");
+            Console.WriteLine($"Loaded {plugin}");
 
             foreach (var command in plugin.Commands)
             {
-                Console.WriteLine("   " + command);
+                Console.WriteLine($"   {command}");
             }
 
             Console.WriteLine();

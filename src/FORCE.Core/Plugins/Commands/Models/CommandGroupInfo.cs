@@ -25,6 +25,9 @@ internal class CommandGroupInfo
             return false;
         }
 
+        if (commandGroupAttribute.Prefixes.Any(p => p.Contains(' ')))
+            throw new("Command group prefix can not contain any space.");
+
         commandGroup = new()
         {
             Prefixes = commandGroupAttribute.Prefixes

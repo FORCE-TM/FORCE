@@ -1,18 +1,26 @@
-﻿using FORCE.Core.Plugins.Commands.Models;
+﻿using BoomTown.FuzzySharp;
+using FORCE.Core.Plugins.Commands.Models;
+using FORCE.Core.Plugins.Models;
 
 namespace FORCE.Core.Plugins.Commands;
 
 internal class CommandHandler
 {
     private readonly PluginManager _pluginManager;
+    private readonly List<PluginInfo> _plugins;
 
     public CommandHandler(PluginManager pluginManager)
     {
         _pluginManager = pluginManager;
-    }
 
-    public void StartListening()
-    {
+        _plugins = _pluginManager.PluginAssemblies.SelectMany(a => a.Plugins).ToList();
+
+        _pluginManager.OnPluginLoaded += (plugin, _) =>
+            _plugins.Add(plugin);
+
+        _pluginManager.OnPluginUnloaded += (plugin, _) =>
+            _plugins.Remove(plugin);
+
         _pluginManager.Force.Server.OnPlayerChat += HandlePlayerChatAsync;
     }
 
@@ -21,57 +29,53 @@ internal class CommandHandler
         if (text.Length <= 1 || !text.StartsWith('/'))
             return;
 
-        // TODO: Don't split if Remainder
-        string[] cmdParams = text.Substring(1).Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        string cmdName = cmdParams[0].ToLower();
-        cmdParams = cmdParams[1..];
+        // Trim command prefix
+        text = text[1..];
 
-        // TODO: Find closest command name using fuzzy matching
-        if (!TryFindCommand(cmdName, cmdParams, out var command))
+        if (!TryFindCommand(text, out CommandInfo command, out string commandName, out string suggestionMatch))
         {
-            await _pluginManager.Force.Server.ChatSendServerMessageToLoginAsync(
-                $"$G> $F00There is no such command as $FFF/{cmdName}"/* + $"$F00, did you mean $FFF/{closestCmdName}$F00?"*/,
-                playerLogin);
+            string errorMessage = $"$G> $F00There is no such command as $FFF/{commandName ?? text}";
+
+            if (suggestionMatch != null)
+                errorMessage += $"$F00, did you mean $FFF/{suggestionMatch}$F00?";
+
+            await _pluginManager.Force.Server.ChatSendServerMessageToLoginAsync(errorMessage, playerLogin);
 
             return;
         }
 
-        Console.WriteLine($"Command {text} from player {playerLogin}");
+        Console.WriteLine($"Command /{commandName}");
     }
 
-    // TODO: Support for command groups
-    // TODO: If only 1 name match but not enough arguments, send help message
-    // TODO: If more than 1 name match but not enough arguments, send help dialog?
-    // TODO: Cache commands:
-    // PluginManager.OnPluginLoaded
-    // PluginManager.OnPluginUnloaded
-    // PluginManager.OnPluginReloaded
-    // "12 commands discovered (3 new)"
-    private bool TryFindCommand(string cmdName, string[] cmdParams, out CommandInfo command)
+    private bool TryFindCommand(string text, out CommandInfo command, out string commandName, out string suggestion)
     {
-        var allCommands = _pluginManager.PluginAssemblies.SelectMany(a => a.Plugins).SelectMany(p => p.Commands);
+        command = null; commandName = null; suggestion = null;
+        int matchRatio = 0, suggestionRatio = 0;
 
-        var nameMatchCommands = allCommands.Where(c => c.Names.Contains(cmdName, StringComparer.OrdinalIgnoreCase)).ToList();
+        string[] textSplit = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        if (nameMatchCommands.Count == 0)
+        foreach (var pluginCommand in _plugins.SelectMany(p => p.Commands))
         {
-            command = null;
-            return false;
-        }
+            // TODO: Cache this, as it never changes
+            string[] matchNames = pluginCommand.IsInGroup
+                ? pluginCommand.Group.Prefixes.Select(prefix => string.Join(' ', prefix, pluginCommand.Name)).ToArray()
+                : pluginCommand.Names;
 
-        command = nameMatchCommands.SingleOrDefault(cmd =>
-        {
-            int cmdParamCount;
+            string userCommandName = textSplit.Length > 1 && pluginCommand.IsInGroup
+                ? string.Join(' ', textSplit[0], textSplit[1])
+                : textSplit[0];
 
-            for (cmdParamCount = 0; cmdParamCount < cmd.Parameters.Count; cmdParamCount++)
+            var (matchName, maxRatio) = matchNames.ToDictionary(m => m, m => Fuzzy.Ratio(m, userCommandName)).MaxBy(x => x.Value);
+
+            if (maxRatio >= 75 && maxRatio > matchRatio)
             {
-                var parameter = cmd.Parameters[cmdParamCount];
-
-                if (parameter.HasDefaultValue) break;
+                (command, commandName, matchRatio) = (pluginCommand, userCommandName, maxRatio);
             }
-
-            return cmdParams.Length >= cmdParamCount;
-        });
+            else if (maxRatio >= 50 && maxRatio > suggestionRatio)
+            {
+                (commandName, suggestion, suggestionRatio) = (userCommandName, matchName, maxRatio);
+            }
+        }
 
         return command != null;
     }
