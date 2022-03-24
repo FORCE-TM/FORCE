@@ -54,7 +54,8 @@ internal class CommandHandler
 
         string[] textSplit = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        foreach (var pluginCommand in _plugins.SelectMany(p => p.Commands))
+        // Prioritize groups in case a group would be named the same as a command
+        foreach (var pluginCommand in _plugins.SelectMany(p => p.Commands).OrderByDescending(c => c.IsInGroup))
         {
             // TODO: Cache this, as it never changes
             string[] matchNames = pluginCommand.IsInGroup
@@ -71,7 +72,7 @@ internal class CommandHandler
             {
                 (command, commandName, matchRatio) = (pluginCommand, userCommandName, maxRatio);
             }
-            else if (maxRatio >= 50 && maxRatio > suggestionRatio)
+            else if (maxRatio >= 50 && matchRatio == 0 && maxRatio > suggestionRatio)
             {
                 (commandName, suggestion, suggestionRatio) = (userCommandName, matchName, maxRatio);
             }
