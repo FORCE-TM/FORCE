@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using FORCE.Core.Plugins.Commands.Models;
+using FORCE.Core.Plugins.Models;
 
 namespace FORCE.Core.Plugins.Commands;
 
@@ -8,10 +9,12 @@ internal class CommandListBuilder
     public static readonly Type CommandBaseType = typeof(CommandContext);
 
     private readonly PluginBuilder _pluginBuilder;
+    private readonly PluginInfo _plugin;
 
-    public CommandListBuilder(PluginBuilder pluginBuilder)
+    public CommandListBuilder(PluginBuilder pluginBuilder, PluginInfo plugin)
     {
         _pluginBuilder = pluginBuilder;
+        _plugin = plugin;
     }
 
     private IEnumerable<CommandInfo> DiscoverCommandsFromModuleClasses(Module module)
@@ -33,7 +36,7 @@ internal class CommandListBuilder
     {
         foreach (var method in @class.GetMethods().Where(IsValidCommandMethod))
         {
-            if (CommandInfo.TryGetFromMethod(method, out var command))
+            if (CommandInfo.TryGetFromMethod(method, _plugin, out var command))
             {
                 yield return command;
             }

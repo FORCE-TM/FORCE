@@ -12,20 +12,7 @@ public class PluginInfo
 
     internal List<CommandInfo> Commands { get; set; }
 
-    internal Type Class { get; set; }
-
-    internal ForcePlugin MainInstance { get; private set; }
-
-    private Func<ForcePlugin> _newInstanceFunc;
-    internal Func<ForcePlugin> NewInstanceFunc
-    {
-        get => _newInstanceFunc;
-        set
-        {
-            _newInstanceFunc = value;
-            MainInstance = value.Invoke();
-        }
-    }
+    internal ForcePlugin MainInstance { get; set; }
 
     public override string ToString()
     {

@@ -1,4 +1,5 @@
 ﻿using BoomTown.FuzzySharp;
+using FORCE.Core.Extensions;
 using FORCE.Core.Plugins.Commands.Models;
 using FORCE.Core.Plugins.Models;
 
@@ -24,7 +25,7 @@ internal class CommandHandler
         _pluginManager.Force.Server.OnPlayerChat += HandlePlayerChatAsync;
     }
 
-    private async Task HandlePlayerChatAsync(int playerUid, string playerLogin, string text, bool isCommand)
+    private async Task HandlePlayerChatAsync(int playerUid, string playerLogin, string text, bool _)
     {
         if (text.Length <= 1 || !text.StartsWith('/'))
             return;
@@ -32,29 +33,38 @@ internal class CommandHandler
         // Trim command prefix
         text = text[1..];
 
-        if (!TryFindCommand(text, out CommandInfo command, out string commandName, out string suggestionMatch))
+        if (!TryMatchCommand(text, out CommandInfo command, out string commandName, out string suggestionMatch))
         {
             string errorMessage = $"$G> $F00There is no such command as $FFF/{commandName ?? text}";
 
             if (suggestionMatch != null)
                 errorMessage += $"$F00, did you mean $FFF/{suggestionMatch}$F00?";
 
-            await _pluginManager.Force.Server.ChatSendServerMessageToLoginAsync(errorMessage, playerLogin);
+            await _pluginManager.Force.Server.ChatSendServerMessageToIdAsync(errorMessage, playerUid);
 
             return;
         }
 
-        Console.WriteLine($"Command /{commandName}");
+        if (!TryGetParameters(text, command, commandName, out var parameters))
+        {
+            string errorMessage = $"$G> $F00Usage: $FFF{command}";
+
+            await _pluginManager.Force.Server.ChatSendServerMessageToIdAsync(errorMessage, playerUid);
+        }
+
+        var pluginContext = CreatePluginContext(command, playerUid);
+
+        command.Method.Invoke(pluginContext, parameters.ToArray());
     }
 
-    private bool TryFindCommand(string text, out CommandInfo command, out string commandName, out string suggestion)
+    private bool TryMatchCommand(string text, out CommandInfo command, out string commandName, out string suggestion)
     {
         command = null; commandName = null; suggestion = null;
         int matchRatio = 0, suggestionRatio = 0;
 
         string[] textSplit = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        // Prioritize groups in case a group would be named the same as a command
+        // Prioritize groups in case a command would be named the same as a group and would match first
         foreach (var pluginCommand in _plugins.SelectMany(p => p.Commands).OrderByDescending(c => c.IsInGroup))
         {
             // TODO: Cache this, as it never changes
@@ -79,5 +89,63 @@ internal class CommandHandler
         }
 
         return command != null;
+    }
+
+    private bool TryGetParameters(string text, CommandInfo command, string commandName, out IReadOnlyCollection<object> parameters)
+    {
+        var userParameters = text
+            .Split(' ')
+            .Skip(commandName.Count(c => c == ' ') + 1)
+            .Select(p => (object)p)
+            .ToHashSet();
+
+        if (userParameters.Count < command.Parameters.Count(p => !p.HasDefaultValue))
+        {
+            parameters = null;
+            return false;
+        }
+
+        if (userParameters.Count > command.Parameters.Count)
+        {
+            // Remove extra parameters
+            userParameters = userParameters.SkipLast(userParameters.Count - command.Parameters.Count).ToHashSet();
+        }
+        else if (command.Parameters.Count > userParameters.Count)
+        {
+            // Add default parameters
+            command.Parameters.Skip(userParameters.Count).ForEach(p => userParameters.Add(p.DefaultValue));
+        }
+
+        parameters = userParameters;
+        return true;
+    }
+
+    private PluginContext CreatePluginContext(CommandInfo command, int playerUid)
+    {
+        var pluginContext = (PluginContext)Activator.CreateInstance(command.Method.DeclaringType);
+
+        pluginContext.Force = _pluginManager.Force;
+        pluginContext.Plugin = command.Plugin;
+
+        var commandContext = new CommandContext()
+        {
+            Command = command,
+            Author = _pluginManager.Force.Server.Players[playerUid]
+        };
+
+        if (pluginContext is CommandContext cc)
+        {
+            // TODO: Avoid having to copy these values manually
+            cc.Command = commandContext.Command;
+            cc.Author = commandContext.Author;
+        }
+        else if (pluginContext is ForcePlugin fp)
+        {
+            fp.Command = commandContext;
+            fp.Command.Force = pluginContext.Force;
+            fp.Command.Plugin = pluginContext.Plugin;
+        }
+
+        return pluginContext;
     }
 }

@@ -12,15 +12,15 @@ internal class PluginBuilder
 {
     public static readonly Type PluginBaseType = typeof(ForcePlugin);
 
+    public PluginManager PluginManager { get; }
     public Type PluginClass { get; }
 
-    private readonly PluginManager _pluginManager;
     private readonly PluginAttribute _pluginAttribute;
     private readonly SummaryAttribute _summaryAttribute;
 
     public PluginBuilder(Module module, PluginManager pluginManager)
     {
-        _pluginManager = pluginManager;
+        PluginManager = pluginManager;
 
         PluginClass = module.GetTypes().SingleOrDefault(IsValidPluginClass);
 
@@ -36,8 +36,8 @@ internal class PluginBuilder
         _summaryAttribute = PluginClass.GetCustomAttribute<SummaryAttribute>();
     }
 
-    private IEnumerable<CommandInfo> GetCommands()
-        => new CommandListBuilder(this).Build();
+    private IEnumerable<CommandInfo> GetCommands(PluginInfo plugin)
+        => new CommandListBuilder(this, plugin).Build();
 
     // (without attribute checks)
     private bool IsValidPluginClass(Type type)
@@ -48,15 +48,15 @@ internal class PluginBuilder
            !type.IsAbstract &&
            !type.ContainsGenericParameters;
 
-    private Func<ForcePlugin> CreateInstanceFunc(PluginInfo plugin) => () =>
+    private ForcePlugin CreateInstance(PluginInfo plugin)
     {
         var instance = (ForcePlugin)Activator.CreateInstance(PluginClass);
 
-        instance.UseTheForce(_pluginManager.Force);
-        instance.SetPlugin(plugin);
+        instance.Force = PluginManager.Force;
+        instance.Plugin = plugin;
 
         return instance;
-    };
+    }
 
     public PluginInfo Build()
     {
@@ -65,12 +65,11 @@ internal class PluginBuilder
             Name = _pluginAttribute.Name,
             Version = _pluginAttribute.Version,
             Author = _pluginAttribute.Author,
-            Summary = _summaryAttribute.Text,
-            Class = PluginClass,
-            Commands = GetCommands().ToList()
+            Summary = _summaryAttribute.Text
         };
 
-        plugin.NewInstanceFunc = CreateInstanceFunc(plugin);
+        plugin.Commands = GetCommands(plugin).ToList();
+        plugin.MainInstance = CreateInstance(plugin);
 
         return plugin;
     }

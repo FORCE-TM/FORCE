@@ -5,7 +5,7 @@ using FORCE.Core.Plugins.Commands.Attributes;
 
 namespace FORCE.Plugin.AutoGreeter;
 
-[CommandGroup("autogreeter", "autogreet", "greeter")]
+[CommandGroup("autogreeter", "autogreet", "greeter", "ag")]
 [RequireRole(PlayerRole.Admin)]
 public class AdminCommands : CommandContext
 {

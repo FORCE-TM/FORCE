@@ -12,7 +12,7 @@ public class Plugin : ForcePlugin
 
     public override async Task OnPluginLoadAsync(bool reload)
     {
-        #pragma warning disable CS1998
+#pragma warning disable CS1998
 
         Server.OnPlayerConnect += async (login, _)
             => _lastLoggedInPlayer = login;
@@ -34,15 +34,22 @@ public class Plugin : ForcePlugin
 
         if (player == null)
         {
-            if (Command?.Author != null)
-                await Command.ReplyAuthorAsync($"$F00Player $FFF{login} $F00not found.");
+            if (Command != null)
+            {
+                if (login == null)
+                    await Command.ReplyAsync("$F00No last logged in player found.");
+                else
+                    await Command.ReplyAsync($"$F00Player $FFF{login} $F00not found.");
+            }
 
             return;
         }
 
         if (Command == null) // Means it was called from the event
             await Server.ChatSendServerMessageAsync($"$G>> Hey $FFF{player.NickName}$Z$S! Enjoy your stay (:");
+        else if (player.Login == Command.Author.Login)
+            await Command.ReplyAsync("$F00You can not greet yourself.");
         else
-            await Server.ChatSendServerMessageAsync($"$G[{Command.Author.NickName}$Z$S] Hey $FFF{player.NickName}$Z$S!");
+            await Command.SendAsync($"$G[{Command.Author.NickName}$Z$S] Hey $FFF{player.NickName}$Z$S!", false);
     }
 }

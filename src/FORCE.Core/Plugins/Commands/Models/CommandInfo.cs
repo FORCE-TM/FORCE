@@ -4,11 +4,15 @@ using FORCE.Core.Enums;
 using FORCE.Core.Extensions;
 using FORCE.Core.Plugins.Attributes;
 using FORCE.Core.Plugins.Commands.Attributes;
+using FORCE.Core.Plugins.Models;
 
 namespace FORCE.Core.Plugins.Commands.Models;
 
 internal class CommandInfo
 {
+    public MethodInfo Method { get; private set; }
+    public PluginInfo Plugin { get; private set; }
+
     public string Name => Names.First();
     public string[] Names { get; private set; }
     public string Summary { get; private set; }
@@ -22,7 +26,7 @@ internal class CommandInfo
     {
     }
 
-    public static bool TryGetFromMethod(MethodInfo method, out CommandInfo command)
+    public static bool TryGetFromMethod(MethodInfo method, PluginInfo plugin, out CommandInfo command)
     {
         if (!method.TryGetCustomAttribute<CommandAttribute>(out var commandAttribute))
         {
@@ -32,6 +36,8 @@ internal class CommandInfo
 
         command = new()
         {
+            Method = method,
+            Plugin = plugin,
             Names = commandAttribute.Names
         };
 
