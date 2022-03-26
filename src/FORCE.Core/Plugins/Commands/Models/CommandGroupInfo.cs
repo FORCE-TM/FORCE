@@ -12,6 +12,7 @@ internal class CommandGroupInfo
     public string Summary { get; private set; }
     public PlayerRole? RequiredRole { get; private set; }
     public bool HideUnauthorized { get; set; }
+    public bool ThreadSafe { get; set; }
 
     private CommandGroupInfo()
     {
@@ -42,6 +43,11 @@ internal class CommandGroupInfo
         {
             commandGroup.RequiredRole = requireRoleAttribute.Role;
             commandGroup.HideUnauthorized = requireRoleAttribute.HideUnauthorized;
+        }
+
+        if (commandClass.TryGetCustomAttribute<ThreadSafeAttribute>(out _))
+        {
+            commandGroup.ThreadSafe = true;
         }
 
         return true;

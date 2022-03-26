@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
-using FORCE.Core.Plugins.Models;
 
-namespace FORCE.Core.Plugins;
+namespace FORCE.Core.Plugins.Models;
 
 internal class PluginAssembly
 {

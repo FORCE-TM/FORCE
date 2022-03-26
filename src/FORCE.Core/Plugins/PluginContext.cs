@@ -2,7 +2,7 @@
 
 namespace FORCE.Core.Plugins;
 
-public abstract class PluginContext
+public class PluginContext
 {
     public ForceController Force { get; internal set; }
     public TmServer Server => Force.Server;

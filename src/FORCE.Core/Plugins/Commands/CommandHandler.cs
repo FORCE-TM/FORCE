@@ -1,5 +1,7 @@
-﻿using BoomTown.FuzzySharp;
+﻿using System.Reflection;
+using BoomTown.FuzzySharp;
 using FORCE.Core.Extensions;
+using FORCE.Core.Plugins.Attributes;
 using FORCE.Core.Plugins.Commands.Models;
 using FORCE.Core.Plugins.Models;
 
@@ -7,31 +9,46 @@ namespace FORCE.Core.Plugins.Commands;
 
 internal class CommandHandler
 {
+    private ForceController Force => _pluginManager.Force;
+
     private readonly PluginManager _pluginManager;
     private readonly List<PluginInfo> _plugins;
+    private readonly Dictionary<PluginInfo, List<PersistentMember>> _persistentMembers;
 
     public CommandHandler(PluginManager pluginManager)
     {
         _pluginManager = pluginManager;
+        _persistentMembers = new();
 
         _plugins = _pluginManager.PluginAssemblies.SelectMany(a => a.Plugins).ToList();
 
         _pluginManager.OnPluginLoaded += (plugin, _) =>
             _plugins.Add(plugin);
 
-        _pluginManager.OnPluginUnloaded += (plugin, _) =>
+        _pluginManager.OnPluginUnloaded += (plugin, reload) =>
+        {
             _plugins.Remove(plugin);
 
-        _pluginManager.Force.Server.OnPlayerChat += HandlePlayerChatAsync;
+            if (!reload)
+            {
+                _persistentMembers.Remove(plugin);
+            }
+            else if (_persistentMembers.ContainsKey(plugin))
+            {
+                _persistentMembers[plugin].RemoveAll(m => !m.BetweenReload);
+            }
+        };
+
+        Force.Server.OnPlayerChat += HandleCommandAsync;
     }
 
-    private async Task HandlePlayerChatAsync(int playerUid, string playerLogin, string text, bool _)
+    private async Task HandleCommandAsync(int playerUid, string playerLogin, string text, bool _)
     {
-        if (text.Length <= 1 || !text.StartsWith('/'))
+        if (playerUid == 0) // server
             return;
 
-        // Trim command prefix
-        text = text[1..];
+        if (!text.StartsWith('/') || (text = text.TrimStart('/')).Length == 0)
+            return;
 
         if (!TryMatchCommand(text, out CommandInfo command, out string commandName, out string suggestionMatch))
         {
@@ -40,7 +57,7 @@ internal class CommandHandler
             if (suggestionMatch != null)
                 errorMessage += $"$F00, did you mean $FFF/{suggestionMatch}$F00?";
 
-            await _pluginManager.Force.Server.ChatSendServerMessageToIdAsync(errorMessage, playerUid);
+            await Force.Server.ChatSendServerMessageToIdAsync(errorMessage, playerUid);
 
             return;
         }
@@ -49,12 +66,26 @@ internal class CommandHandler
         {
             string errorMessage = $"$G> $F00Usage: $FFF{command}";
 
-            await _pluginManager.Force.Server.ChatSendServerMessageToIdAsync(errorMessage, playerUid);
+            await Force.Server.ChatSendServerMessageToIdAsync(errorMessage, playerUid);
+
+            return;
         }
 
-        var pluginContext = CreatePluginContext(command, playerUid);
+        if (command.IsInGroup && command.Group.ThreadSafe)
+            await Force.ObjectSemaphore.WaitAsync(command.Group);
+        else if (command.ThreadSafe)
+            await Force.ObjectSemaphore.WaitAsync(command);
 
-        command.Method.Invoke(pluginContext, parameters.ToArray());
+        var pluginContext = CreatePluginContext(command, playerUid);
+        LoadPersistentMembers(pluginContext);
+
+        await (Task)command.Method.Invoke(pluginContext, parameters.ToArray());
+        SavePersistentMembers(pluginContext);
+
+        if (command.IsInGroup && command.Group.ThreadSafe)
+            Force.ObjectSemaphore.Release(command.Group);
+        else if (command.ThreadSafe)
+            Force.ObjectSemaphore.Release(command);
     }
 
     private bool TryMatchCommand(string text, out CommandInfo command, out string commandName, out string suggestion)
@@ -91,13 +122,13 @@ internal class CommandHandler
         return command != null;
     }
 
-    private bool TryGetParameters(string text, CommandInfo command, string commandName, out IReadOnlyCollection<object> parameters)
+    private bool TryGetParameters(string text, CommandInfo command, string commandName, out List<object> parameters)
     {
         var userParameters = text
             .Split(' ')
             .Skip(commandName.Count(c => c == ' ') + 1)
             .Select(p => (object)p)
-            .ToHashSet();
+            .ToList();
 
         if (userParameters.Count < command.Parameters.Count(p => !p.HasDefaultValue))
         {
@@ -108,7 +139,7 @@ internal class CommandHandler
         if (userParameters.Count > command.Parameters.Count)
         {
             // Remove extra parameters
-            userParameters = userParameters.SkipLast(userParameters.Count - command.Parameters.Count).ToHashSet();
+            userParameters = userParameters.SkipLast(userParameters.Count - command.Parameters.Count).ToList();
         }
         else if (command.Parameters.Count > userParameters.Count)
         {
@@ -124,13 +155,13 @@ internal class CommandHandler
     {
         var pluginContext = (PluginContext)Activator.CreateInstance(command.Method.DeclaringType);
 
-        pluginContext.Force = _pluginManager.Force;
+        pluginContext.Force = Force;
         pluginContext.Plugin = command.Plugin;
 
         var commandContext = new CommandContext()
         {
             Command = command,
-            Author = _pluginManager.Force.Server.Players[playerUid]
+            Author = Force.Server.Players[playerUid]
         };
 
         if (pluginContext is CommandContext cc)
@@ -147,5 +178,43 @@ internal class CommandHandler
         }
 
         return pluginContext;
+    }
+
+    private void LoadPersistentMembers(PluginContext pluginContext)
+    {
+        const BindingFlags bindingAttr = PersistentMember.BindingAttr;
+
+        if (_persistentMembers.TryGetValue(pluginContext.Plugin, out var persistentMembers))
+        {
+            foreach (var member in persistentMembers.Where(m => m.ClassType == pluginContext.GetType()))
+            {
+                if (member.MemberType == MemberTypes.Property)
+                    pluginContext.GetType().GetProperty(member.Name, bindingAttr)?.SetValue(pluginContext, member.Value);
+                else if (member.MemberType == MemberTypes.Field)
+                    pluginContext.GetType().GetField(member.Name, bindingAttr)?.SetValue(pluginContext, member.Value);
+            }
+        }
+    }
+
+    private void SavePersistentMembers(PluginContext pluginContext)
+    {
+        const BindingFlags bindingAttr = PersistentMember.BindingAttr;
+
+        var members = pluginContext.GetType().GetProperties(bindingAttr).Cast<MemberInfo>()
+            .Concat(pluginContext.GetType().GetFields(bindingAttr));
+
+        if (!_persistentMembers.TryGetValue(pluginContext.Plugin, out var persistentMembers))
+            persistentMembers = _persistentMembers[pluginContext.Plugin] = new();
+
+        foreach (var member in members)
+        {
+            if (!member.TryGetCustomAttribute<PersistentAttribute>(out var persistentAttribute))
+                continue;
+
+            var persistentMember = new PersistentMember(member, pluginContext, persistentAttribute);
+
+            persistentMembers.RemoveAll(m => m.Name == persistentMember.Name);
+            persistentMembers.Add(persistentMember);
+        }
     }
 }

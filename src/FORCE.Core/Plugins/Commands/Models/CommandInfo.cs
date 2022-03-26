@@ -18,6 +18,7 @@ internal class CommandInfo
     public string Summary { get; private set; }
     public PlayerRole? RequiredRole { get; private set; }
     public bool HideUnauthorized { get; set; }
+    public bool ThreadSafe { get; set; }
     public List<CommandParameterInfo> Parameters { get; private set; }
     public CommandGroupInfo Group { get; private set; }
     public bool IsInGroup { get; private set; }
@@ -50,6 +51,11 @@ internal class CommandInfo
         {
             command.RequiredRole = requireRoleAttribute.Role;
             command.HideUnauthorized = requireRoleAttribute.HideUnauthorized;
+        }
+
+        if (method.TryGetCustomAttribute<ThreadSafeAttribute>(out _))
+        {
+            command.ThreadSafe = true;
         }
 
         command.Parameters = new();

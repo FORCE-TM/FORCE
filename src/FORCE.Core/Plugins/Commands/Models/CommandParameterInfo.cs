@@ -23,7 +23,9 @@ internal class CommandParameterInfo
         HasDefaultValue = parameterInfo.HasDefaultValue;
 
         if (parameterInfo.TryGetCustomAttribute<SummaryAttribute>(out var summaryAttribute))
+        {
             Summary = summaryAttribute.Text;
+        }
 
         if (parameterInfo.TryGetCustomAttribute<RemainderAttribute>(out _))
         {

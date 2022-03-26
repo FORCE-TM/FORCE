@@ -50,8 +50,9 @@ internal class CommandListBuilder
            !type.IsAbstract &&
            !type.ContainsGenericParameters;
 
-    private bool IsValidCommandMethod(MethodBase method)
+    private bool IsValidCommandMethod(MethodInfo method)
         => method.IsPublic &&
+           method.ReturnType == typeof(Task) &&
            !method.ContainsGenericParameters;
 
     public IEnumerable<CommandInfo> Build()
