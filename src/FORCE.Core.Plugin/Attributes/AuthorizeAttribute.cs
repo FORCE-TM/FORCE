@@ -6,7 +6,7 @@ namespace FORCE.Core.Plugin;
 /// Indicates that one command or all commands from a class require a player to have a role in order to use them.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class AuthorizeAttribute : Attribute, IAuthorizeAttribute
+public sealed class AuthorizeAttribute : Attribute, IAuthorizeAttribute
 {
     /// <summary>
     /// <inheritdoc cref="AuthorizeAttribute"/>

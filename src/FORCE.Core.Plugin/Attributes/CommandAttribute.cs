@@ -7,7 +7,7 @@
 /// In order to add a group prefix to a command, its parent class must be decorated with <see cref="CommandGroupAttribute"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
-public class CommandAttribute : Attribute, ICommandAttribute
+public sealed class CommandAttribute : Attribute, ICommandAttribute
 {
     /// <summary>
     /// <inheritdoc cref="CommandAttribute"/>

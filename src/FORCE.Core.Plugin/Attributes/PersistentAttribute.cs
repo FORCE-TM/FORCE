@@ -4,7 +4,7 @@
 /// Indicates that the value of a field or property should be preserved after a plugin reloads.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class PersistentAttribute : Attribute, IPersistentAttribute
+public sealed class PersistentAttribute : Attribute, IPersistentAttribute
 {
     /// <summary>
     /// <inheritdoc cref="PersistentAttribute"/>

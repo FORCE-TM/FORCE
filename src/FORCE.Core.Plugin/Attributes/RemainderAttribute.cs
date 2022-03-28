@@ -5,7 +5,7 @@
 /// The parameter must be of type <see cref="string"/>, and there can not be more parameters after it.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public class RemainderAttribute : Attribute, IRemainderAttribute
+public sealed class RemainderAttribute : Attribute, IRemainderAttribute
 {
     /// <summary>
     /// <inheritdoc cref="RemainderAttribute"/>

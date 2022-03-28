@@ -4,7 +4,7 @@
 /// Adds a summary to your plugin, command group, command or command parameter.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Parameter)]
-public class SummaryAttribute : Attribute, ISummaryAttribute
+public sealed class SummaryAttribute : Attribute, ISummaryAttribute
 {
     /// <summary>
     /// <inheritdoc cref="SummaryAttribute"/>

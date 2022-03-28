@@ -7,7 +7,7 @@
 /// There can only be one per assembly, or at least per assembly module.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class PluginAttribute : Attribute, IPluginAttribute
+public sealed class PluginAttribute : Attribute, IPluginAttribute
 {
     /// <summary>
     /// <inheritdoc cref="PluginAttribute"/>
