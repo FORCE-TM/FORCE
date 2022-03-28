@@ -3,7 +3,7 @@ using FORCE.Core.Shared;
 
 namespace FORCE.Plugin.AutoGreeter;
 
-[Group("autogreeter", "autogreet", "greeter", "ag")]
+[CommandGroup("autogreeter", "autogreet", "greeter", "ag")]
 [Authorize(PlayerRole.Admin)]
 public class AdminCommands
 {
