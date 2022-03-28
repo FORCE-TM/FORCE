@@ -5,11 +5,11 @@
 /// Command groups allow to add a prefix to all of the commands in a class.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public sealed class CommandGroupAttribute : Attribute, ICommandGroupAttribute
+public sealed class GroupAttribute : Attribute, IGroupAttribute
 {
-    /// <inheritdoc cref="CommandGroupAttribute"/>
+    /// <inheritdoc cref="GroupAttribute"/>
     /// <param name="prefixes">Prefix of the command group. Aliases can be added.</param>
-    public CommandGroupAttribute(params string[] prefixes)
+    public GroupAttribute(params string[] prefixes)
     {
         Prefixes = prefixes;
     }
@@ -18,7 +18,7 @@ public sealed class CommandGroupAttribute : Attribute, ICommandGroupAttribute
     public string[] Prefixes { get; set; }
 }
 
-public interface ICommandGroupAttribute
+public interface IGroupAttribute
 {
     /// <summary>
     /// The prefix and aliases of the command group.

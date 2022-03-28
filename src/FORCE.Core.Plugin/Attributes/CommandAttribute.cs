@@ -3,7 +3,7 @@
 /// <summary>
 /// Indicates that a method is a plugin command.<br/>
 /// This must be used for a command to be discoverable.<br/>
-/// In order to add a group prefix to a command, its parent class must be decorated with <see cref="CommandGroupAttribute"/>.
+/// In order to add a group prefix to a command, its parent class must be decorated with <see cref="GroupAttribute"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class CommandAttribute : Attribute, ICommandAttribute
