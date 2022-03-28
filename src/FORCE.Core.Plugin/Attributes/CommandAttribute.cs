@@ -4,7 +4,7 @@
 /// Indicates that a method is a plugin command.<br/>
 /// This must be used for a command to be discoverable.<br/>
 /// Unless this method is belongs to a <see cref="PluginBase"/> class, its parent class must inherit from <see cref="CommandBase"/>.<br/>
-/// In order to add a group prefix to a command, its parent class must be decorated with <see cref="GroupAttribute"/>.
+/// In order to add a group prefix to a command, its parent class must be decorated with <see cref="CommandGroupAttribute"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class CommandAttribute : Attribute, ICommandAttribute
