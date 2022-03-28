@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using GbxRemoteNet;
+﻿using GbxRemoteNet;
 
 namespace FORCE.Core.Shared;
 
@@ -9,7 +8,6 @@ namespace FORCE.Core.Shared;
 public sealed class TmServer : GbxRemoteClient
 {
     /// <inheritdoc cref="PlayerList"/>
-    [MaybeNull]
     public PlayerList Players { get; private set; }
 
     public TmServer(string host, int port) : base(host, port)

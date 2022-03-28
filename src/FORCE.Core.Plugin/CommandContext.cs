@@ -1,14 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using GbxRemoteNet;
+﻿using GbxRemoteNet;
 
 namespace FORCE.Core.Plugin;
 
 public class CommandContext : ContextBase
 {
     /// <summary>
-    /// The player who executed the command.
+    /// Name of the command that was typed by the <seealso cref="Author"/>.<br/>
+    /// If command is part of a group, this will also contain the typed group prefix.
     /// </summary>
-    [MaybeNull]
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Player who executed the command.
+    /// </summary>
     public PlayerDetailedInfo Author { get; set; }
 
     /// <summary>
@@ -17,7 +21,7 @@ public class CommandContext : ContextBase
     /// <param name="message">Message to send.</param>
     /// <param name="arrowPrefix">Whether to prefix the message with a single arrow "> ". Used as a distinction between public and private messages.</param>
     public async Task ReplyAsync(string message, bool arrowPrefix = true)
-        => await Server!.ChatSendServerMessageToIdAsync((arrowPrefix ? "$G> " : null) + message, Author!.PlayerId);
+        => await Server.ChatSendServerMessageToIdAsync((arrowPrefix ? "$G> " : null) + message, Author.PlayerId);
 
     /// <summary>
     /// Send a public message that everyone will see.
@@ -25,7 +29,7 @@ public class CommandContext : ContextBase
     /// <param name="message">Message to send.</param>
     /// <param name="arrowPrefix">Whether to prefix the message with a double arrow ">> ". Used as a distinction between public and private messages.</param>
     public async Task SendAsync(string message, bool arrowPrefix = true)
-        => await Server!.ChatSendServerMessageAsync((arrowPrefix ? "$G>> " : null) + message);
+        => await Server.ChatSendServerMessageAsync((arrowPrefix ? "$G>> " : null) + message);
 
     /// <summary>
     /// Send a message prefixed with the <see cref="Author"/> nickname, just like if he would talk in chat.

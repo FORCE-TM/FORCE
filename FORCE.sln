@@ -9,11 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GbxRemote.Net", "submodules\GbxRemote.Net\GbxRemote.Net\GbxRemote.Net.csproj", "{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FORCE.Core", "src\FORCE.Core\FORCE.Core.csproj", "{BE90A4CE-2529-45BA-AC2F-A49F2A82B669}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FORCE.Core", "src\FORCE.Core\FORCE.Core.csproj", "{BE90A4CE-2529-45BA-AC2F-A49F2A82B669}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FORCE.Core.Shared", "src\FORCE.Core.Shared\FORCE.Core.Shared.csproj", "{2A019C59-3F83-44A5-B5FB-B17AA240DBEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FORCE.Core.Shared", "src\FORCE.Core.Shared\FORCE.Core.Shared.csproj", "{2A019C59-3F83-44A5-B5FB-B17AA240DBEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FORCE.Core.Plugin", "src\FORCE.Core.Plugin\FORCE.Core.Plugin.csproj", "{67EE63AF-6080-4515-A146-AE0318955D0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FORCE.Core.Plugin", "src\FORCE.Core.Plugin\FORCE.Core.Plugin.csproj", "{67EE63AF-6080-4515-A146-AE0318955D0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{ACBC52A4-A289-4B90-9952-17B3698AB181}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FORCE.Plugin.AutoGreeter", "src\Plugins\FORCE.Plugin.AutoGreeter\FORCE.Plugin.AutoGreeter.csproj", "{7B3A61D1-6834-4BFF-86B7-DF39792E0C19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +45,17 @@ Global
 		{67EE63AF-6080-4515-A146-AE0318955D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67EE63AF-6080-4515-A146-AE0318955D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67EE63AF-6080-4515-A146-AE0318955D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3A61D1-6834-4BFF-86B7-DF39792E0C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3A61D1-6834-4BFF-86B7-DF39792E0C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3A61D1-6834-4BFF-86B7-DF39792E0C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3A61D1-6834-4BFF-86B7-DF39792E0C19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BEEA3F0E-C7AF-4FBD-BD0A-19E516E91981} = {D2D42CC4-5199-492C-BABB-711D34FF67D5}
+		{7B3A61D1-6834-4BFF-86B7-DF39792E0C19} = {ACBC52A4-A289-4B90-9952-17B3698AB181}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {162F8D76-A06C-4ABA-B026-2156C62B487F}
