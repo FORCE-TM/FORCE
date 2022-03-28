@@ -5,7 +5,7 @@ namespace FORCE.Plugin.AutoGreeter;
 
 [Group("autogreeter", "autogreet", "greeter", "ag")]
 [Authorize(PlayerRole.Admin)]
-public class AdminCommands : CommandContext
+public class AdminCommands
 {
     [Command("message", "msg")]
     [Summary("Set a new welcome message")]

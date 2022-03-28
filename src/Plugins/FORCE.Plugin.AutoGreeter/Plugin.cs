@@ -19,7 +19,7 @@ public class Plugin : PluginBase
         };
 
         if (!reload)
-            await Server.ChatSendServerMessageAsync($"$G>> Loaded $FFF{Plugin} $G(:");
+            await Server.ChatSendServerMessageAsync($"$G>> Loaded {Plugin.ToColoredString(ColorScheme)} $G(:");
     }
 
     [Command("hey", "hi", "hello", "yo")]
@@ -56,7 +56,7 @@ public class Plugin : PluginBase
         }
         else
         {
-            // That is so that "hey" would become "Hey"
+            // That is so that "hey" will become "Hey"
             string greeting = char.ToUpper(command.Name[0]) + command.Name[1..].ToLower();
 
             await command.SendAsAuthorAsync($"{greeting} $FFF{player.NickName}$Z$S!");

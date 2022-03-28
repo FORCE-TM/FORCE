@@ -1,5 +1,10 @@
 ﻿namespace FORCE.Core.Plugin;
 
+/// <summary>
+/// A plugin must inherit from this class in order to be discoverable.<br/>
+/// The plugin class must also be decorated with <see cref="PluginAttribute"/>.<br/>
+/// There can only be one plugin class per assembly, or at least per assembly module.
+/// </summary>
 public abstract class PluginBase : ContextBase
 {
     /// <summary>

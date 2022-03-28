@@ -4,7 +4,7 @@
 /// Indicates that a class is a FORCE plugin.<br/>
 /// This must be used for a plugin to be discoverable.<br/>
 /// This same class must also inherit from <see cref="PluginBase"/>.<br/>
-/// There can only be one per assembly, or at least per assembly module.
+/// There can only be one plugin class per assembly, or at least per assembly module.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class PluginAttribute : Attribute, IPluginAttribute

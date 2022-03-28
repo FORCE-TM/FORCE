@@ -2,10 +2,14 @@
 
 namespace FORCE.Core.Plugin;
 
+/// <summary>
+/// Class containing info about the executed command, as well as some utility methods to interact with the server.<br/>
+/// In order for a command method to be valid, its first parameter must always be of type <see cref="CommandContext"/>.
+/// </summary>
 public class CommandContext : ContextBase
 {
     /// <summary>
-    /// Name of the command that was typed by the <seealso cref="Author"/>.<br/>
+    /// Name of the command that was typed by the <see cref="Author"/>.<br/>
     /// If command is part of a group, this will also contain the typed group prefix.
     /// </summary>
     public string Name { get; set; }
@@ -36,5 +40,5 @@ public class CommandContext : ContextBase
     /// </summary>
     /// <param name="message">Message to send.</param>
     public async Task SendAsAuthorAsync(string message)
-        => await SendAsync($"$G[{Author!.NickName}$Z$S] {message}", false);
+        => await SendAsync($"$G[{Author.NickName}$Z$S] {message}", false);
 }
