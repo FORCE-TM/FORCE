@@ -7,17 +7,13 @@
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class RemainderAttribute : Attribute, IRemainderAttribute
 {
-    /// <summary>
     /// <inheritdoc cref="RemainderAttribute"/>
-    /// </summary>
     public RemainderAttribute()
     {
         IsRemainder = true;
     }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public bool IsRemainder { get; set; }
 }
 

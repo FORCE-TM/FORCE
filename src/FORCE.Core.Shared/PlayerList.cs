@@ -6,7 +6,11 @@ using GbxRemoteNet.XmlRpc.Types;
 
 namespace FORCE.Core.Shared;
 
-public class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
+/// <summary>
+/// A read-only collection of <see cref="PlayerDetailedInfo"/>, containing the online players of the server.<br/>
+/// This collection can be accessed both using a player login (<see cref="this[string]"/>) or UID (<see cref="this[int]"/>).
+/// </summary>
+public sealed class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
 {
     private readonly List<PlayerDetailedInfo> _players;
     private readonly GbxRemoteClient _tmServer;

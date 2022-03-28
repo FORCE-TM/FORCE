@@ -11,16 +11,16 @@ public sealed class SummaryAttribute : Attribute, ISummaryAttribute
     /// </summary>
     public SummaryAttribute(string text)
     {
-        Text = text;
+        Summary = text;
     }
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public string Text { get; set; }
+    public string? Summary { get; set; }
 }
 
 public interface ISummaryAttribute
 {
-    public string Text { get; set; }
+    public string? Summary { get; set; }
 }

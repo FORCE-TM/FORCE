@@ -1,14 +1,24 @@
 ﻿using System.Text;
-using FORCE.Core.Plugin;
 using FORCE.Core.Shared;
 
-namespace FORCE.Core.Models;
+namespace FORCE.Core.Plugin;
 
-internal class PluginModel : IPluginAttribute, IColoredString
+/// <summary>
+/// A class containing primary information about a plugin, such as its <see cref="Name"/>, <see cref="Version"/>, <see cref="Author"/> or <see cref="Summary"/>.
+/// </summary>
+public sealed class PluginDisplayModel : IPluginAttribute, ISummaryAttribute, IColoredString
 {
+    /// <inheritdoc/>
     public string Name { get; set; }
+
+    /// <inheritdoc/>
     public Version Version { get; set; }
+
+    /// <inheritdoc/>
     public string? Author { get; set; }
+
+    /// <inheritdoc/>
+    public string? Summary { get; set; }
 
     public override string ToString()
     {

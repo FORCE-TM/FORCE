@@ -9,9 +9,7 @@
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class PluginAttribute : Attribute, IPluginAttribute
 {
-    /// <summary>
     /// <inheritdoc cref="PluginAttribute"/>
-    /// </summary>
     /// <param name="name">Display name of the plugin.</param>
     /// <param name="version">Version of the plugin. This must be a valid <see cref="System.Version"/> string.</param>
     /// <param name="author">Display name of the plugin author. Optional.</param>
@@ -22,19 +20,13 @@ public sealed class PluginAttribute : Attribute, IPluginAttribute
         Author = author;
     }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public string Name { get; set; }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public Version Version { get; set; }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public string? Author { get; set; }
 }
 

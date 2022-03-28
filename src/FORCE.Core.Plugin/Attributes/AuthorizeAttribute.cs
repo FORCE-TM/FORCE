@@ -3,14 +3,13 @@
 namespace FORCE.Core.Plugin;
 
 /// <summary>
-/// Indicates that one command or all commands from a class require a player to have a role in order to use them.
+/// Indicates that one command or all commands from a class require a player to have a role in order to use them.<br/>
+/// By default, a command can be used by anyone without requiring a role.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class AuthorizeAttribute : Attribute, IAuthorizeAttribute
 {
-    /// <summary>
     /// <inheritdoc cref="AuthorizeAttribute"/>
-    /// </summary>
     /// <param name="role">Role from which a player will be able to use a command.</param>
     /// <param name="hideIfUnauthorized">Whether or not to hide the existence of a command to unauthorized players.</param>
     public AuthorizeAttribute(PlayerRole role, bool hideIfUnauthorized = true)
@@ -19,14 +18,10 @@ public sealed class AuthorizeAttribute : Attribute, IAuthorizeAttribute
         HideIfUnauthorized = hideIfUnauthorized;
     }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public PlayerRole Role { get; set; }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public bool HideIfUnauthorized { get; set; }
 }
 

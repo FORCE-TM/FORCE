@@ -7,18 +7,14 @@
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class CommandGroupAttribute : Attribute, ICommandGroupAttribute
 {
-    /// <summary>
     /// <inheritdoc cref="CommandGroupAttribute"/>
-    /// </summary>
     /// <param name="prefixes">Prefix of the command group. Aliases can be added.</param>
     public CommandGroupAttribute(params string[] prefixes)
     {
         Prefixes = prefixes;
     }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public string[] Prefixes { get; set; }
 }
 
