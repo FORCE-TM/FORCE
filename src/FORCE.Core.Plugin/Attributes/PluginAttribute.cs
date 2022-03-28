@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Indicates that a class is a FORCE plugin.<br/>
-/// This must be used for a plugin to be discovered.<br/>
-/// The same class must also implement <see cref="Plugin"/>.<br/>
-/// There can only be one per assembly, or at least per "module".
+/// This must be used for a plugin to be discoverable.<br/>
+/// This same class must also inherit from <see cref="PluginBase"/>.<br/>
+/// There can only be one per assembly, or at least per assembly module.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public class PluginAttribute : Attribute, IPluginAttribute
@@ -22,14 +22,36 @@ public class PluginAttribute : Attribute, IPluginAttribute
         Author = author;
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public Version Version { get; set; }
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public string? Author { get; set; }
 }
 
 public interface IPluginAttribute
 {
+    /// <summary>
+    /// The plugin display name.
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// The plugin version.
+    /// </summary>
     public Version Version { get; set; }
+
+    /// <summary>
+    /// The plugin author. Nullable.
+    /// </summary>
     public string? Author { get; set; }
 }
