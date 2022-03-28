@@ -43,7 +43,8 @@ public class Plugin : PluginBase
             return;
         }
 
-        if (command == null) // Means it was called from the event
+        // Means it was called from the event
+        if (command == null)
         {
             await Server.ChatSendServerMessageAsync($"$G>> Hey $FFF{player.NickName}$Z$S! Enjoy your stay (:");
         }
