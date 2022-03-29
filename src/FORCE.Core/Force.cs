@@ -18,7 +18,7 @@ public class Force
         TmServer = new TmServer(Settings.Server.Host, Settings.Server.Port);
 
         var assemblyLoadContext = new AssemblyLoadContext(null, isCollectible: true);
-        var assembly = assemblyLoadContext.LoadFromAssemblyPath(@"C:\Users\furti\source\FORCE-TM\FORCE\src\Plugins\FORCE.Plugin.AutoGreeter\bin\Debug\net6.0\FORCE.Plugin.AutoGreeter.dll");
+        var assembly = assemblyLoadContext.LoadFromAssemblyPath(new DirectoryInfo(@"Plugins\Native\AutoGreeter\Debug\FORCE.Plugin.AutoGreeter.dll").FullName);
 
         var pluginBuilder = new PluginBuilder(assembly.Modules.Single());
 
