@@ -9,10 +9,10 @@ namespace FORCE.Core.Plugin;
 public sealed class PluginDisplayInfo : IPluginAttribute, ISummaryAttribute, IColoredString
 {
     /// <inheritdoc/>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <inheritdoc/>
-    public Version Version { get; set; }
+    public Version Version { get; set; } = null!;
 
     /// <inheritdoc/>
     public string? Author { get; set; }

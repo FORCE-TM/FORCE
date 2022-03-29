@@ -8,7 +8,7 @@ namespace FORCE.Core.Shared;
 public sealed class TmServer : GbxRemoteClient
 {
     /// <inheritdoc cref="PlayerList"/>
-    public PlayerList Players { get; private set; }
+    public PlayerList? Players { get; private set; }
 
     public TmServer(string host, int port) : base(host, port)
     {

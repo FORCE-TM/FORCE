@@ -12,12 +12,12 @@ public class CommandContext : ContextBase
     /// Name of the command that was typed by the <see cref="Author"/>.<br/>
     /// If command is part of a group, this will also contain the typed group prefix.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Player who executed the command.
     /// </summary>
-    public PlayerDetailedInfo Author { get; set; }
+    public PlayerDetailedInfo Author { get; set; } = null!;
 
     /// <summary>
     /// Send a private message to the <see cref="Author"/>.

@@ -10,11 +10,11 @@ namespace FORCE.Core.Plugin;
 public class ContextBase
 {
     /// <inheritdoc cref="PluginDisplayInfo"/>
-    public PluginDisplayInfo Plugin { get; set; }
+    public PluginDisplayInfo Plugin { get; set; } = null!;
 
     /// <inheritdoc cref="TmServer"/>
-    public TmServer Server { get; set; }
+    public TmServer Server { get; set; } = null!;
 
     /// <inheritdoc cref="Shared.ColorScheme"/>
-    public ColorScheme ColorScheme { get; set; }
+    public ColorScheme ColorScheme { get; set; } = null!;
 }
