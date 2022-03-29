@@ -77,11 +77,6 @@ internal class PluginBuilder
 
             var commandBuilder = new CommandBuilder(commandAttribute);
 
-            if (commandGroup != null)
-            {
-                commandBuilder.WithGroup(commandGroup);
-            }
-
             foreach (var attribute in commandMethod.GetCustomAttributes())
             {
                 switch (attribute)
@@ -97,7 +92,17 @@ internal class PluginBuilder
 
             commandBuilder.WithParameters(BuildCommandParameters(commandMethod));
 
-            yield return commandBuilder.Build();
+            var command = commandBuilder.Build();
+
+            if (commandGroup != null)
+            {
+                commandBuilder.WithGroup(commandGroup);
+
+                commandGroup.Commands ??= new List<CommandInfo>();
+                commandGroup.Commands.Add(command);
+            }
+
+            yield return command;
         }
     }
 
@@ -128,11 +133,11 @@ internal class PluginBuilder
     }
 
     private bool IsValidPluginClass(Type type) =>
-        typeof(PluginBase).IsAssignableFrom(type) &&
         type.IsClass &&
         type.IsPublic &&
         !type.IsAbstract &&
-        !type.ContainsGenericParameters;
+        !type.ContainsGenericParameters &&
+        typeof(PluginBase).IsAssignableFrom(type);
 
     private bool IsValidCommandClass(Type type) =>
         type.IsClass &&
