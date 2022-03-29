@@ -11,6 +11,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
     public bool? HideIfUnauthorized { get; set; }
     public CommandGroupInfo? Group { get; set; }
     public List<CommandParameterInfo> Parameters { get; set; } = null!;
+    public PluginInfo Plugin { get; set; } = null!;
 
     public override string ToString()
     {

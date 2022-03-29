@@ -38,7 +38,7 @@ internal class PluginBuilder
             _commands.AddRange(BuildCommands(commandClass, commandGroup));
         }
 
-        return new PluginInfo()
+        var plugin = new PluginInfo()
         {
             Name = pluginAttribute.Name,
             Version = pluginAttribute.Version,
@@ -46,6 +46,10 @@ internal class PluginBuilder
             Summary = summaryAttribute?.Summary,
             Commands = _commands
         };
+
+        _commands.ForEach(c => c.Plugin = plugin);
+
+        return plugin;
     }
 
     private CommandGroupInfo BuildCommandGroup(Type commandClass, CommandGroupAttribute commandGroupAttribute)
