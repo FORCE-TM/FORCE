@@ -9,8 +9,8 @@ namespace FORCE.Core.Plugin;
 /// </summary>
 public class ContextBase
 {
-    /// <inheritdoc cref="PluginDisplayModel"/>
-    public PluginDisplayModel Plugin { get; set; }
+    /// <inheritdoc cref="PluginDisplayInfo"/>
+    public PluginDisplayInfo Plugin { get; set; }
 
     /// <inheritdoc cref="TmServer"/>
     public TmServer Server { get; set; }
