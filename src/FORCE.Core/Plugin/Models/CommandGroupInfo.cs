@@ -1,7 +1,6 @@
-﻿using FORCE.Core.Plugin;
-using FORCE.Core.Shared;
+﻿using FORCE.Core.Shared;
 
-namespace FORCE.Core.Models;
+namespace FORCE.Core.Plugin.Models;
 
 internal class CommandGroupInfo : ICommandGroupAttribute, ISummaryAttribute, IRequireRoleAttribute
 {

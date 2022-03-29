@@ -1,6 +1,4 @@
-﻿using FORCE.Core.Plugin;
-
-namespace FORCE.Core.Models;
+﻿namespace FORCE.Core.Plugin.Models;
 
 internal class CommandParameterInfo : ISummaryAttribute, IRemainderAttribute
 {

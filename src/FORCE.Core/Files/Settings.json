@@ -1,0 +1,10 @@
+{
+    "Server": {
+        "Host": "127.0.0.1",
+        "Port": 5000
+    },
+    "ColorScheme": {
+        "BaseColor": "FFF",
+        "AccentColor": "339"
+    }
+}

@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using FORCE.Core.Models;
-using FORCE.Core.Plugin;
+using FORCE.Core.Plugin.Models;
 
-namespace FORCE.Core.Builders;
+namespace FORCE.Core.Plugin.Builders;
 
 internal class CommandParameterBuilder : ISummaryAttribute, IRemainderAttribute
 {
@@ -15,9 +14,12 @@ internal class CommandParameterBuilder : ISummaryAttribute, IRemainderAttribute
 
     public CommandParameterBuilder(ParameterInfo parameter)
     {
-        _parameterPath = $"Parameter: {_parameter!.Name} in {_parameter.Member.DeclaringType!.Name}.{_parameter.Member.Name}";
+        _parameterPath = $"Parameter: {parameter.Name} in {parameter.Member.DeclaringType!.Name}.{parameter.Member.Name}";
 
-        if (_parameter.ParameterType != typeof(string))
+        if (parameter.Position == 0 && parameter.ParameterType != typeof(CommandContext))
+            throw new InvalidOperationException($"The first parameter of a command must be of type {nameof(CommandContext)}. {_parameterPath}");
+
+        if (parameter.Position != 0 && parameter.ParameterType != typeof(string))
             throw new InvalidOperationException($"At the moment, only parameters of type {typeof(string)} are supported in commands. {_parameterPath}");
 
         _parameter = parameter;
@@ -34,7 +36,7 @@ internal class CommandParameterBuilder : ISummaryAttribute, IRemainderAttribute
     {
         if (remainder.IsRemainder)
         {
-            if (_parameter.Position == _implParameterCount - 1)
+            if (_parameter.Position != _implParameterCount - 1)
                 throw new InvalidOperationException($"{nameof(RemainderAttribute)} can only be used on the last parameter of a command. {_parameterPath}");
 
             if (_parameter.ParameterType != typeof(string))

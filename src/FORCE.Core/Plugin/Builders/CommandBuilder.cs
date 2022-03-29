@@ -1,13 +1,12 @@
-﻿using FORCE.Core.Models;
-using FORCE.Core.Plugin;
+﻿using FORCE.Core.Plugin.Models;
 using FORCE.Core.Shared;
 
-namespace FORCE.Core.Builders;
+namespace FORCE.Core.Plugin.Builders;
 
 internal class CommandBuilder : ICommandAttribute, ISummaryAttribute, IRequireRoleAttribute
 {
-    private CommandGroupBuilder? _commandGroup;
-    private List<CommandParameterBuilder>? _parameters;
+    private readonly List<CommandParameterInfo> _parameters;
+    private CommandGroupInfo? _commandGroup;
 
     public string[] Names { get; }
     public string? Summary { get; private set; }
@@ -17,9 +16,10 @@ internal class CommandBuilder : ICommandAttribute, ISummaryAttribute, IRequireRo
     public CommandBuilder(ICommandAttribute command)
     {
         Names = command.Names;
+        _parameters = new List<CommandParameterInfo>();
     }
 
-    public CommandBuilder WithGroup(CommandGroupBuilder commandGroup)
+    public CommandBuilder WithGroup(CommandGroupInfo commandGroup)
     {
         _commandGroup = commandGroup;
         return this;
@@ -31,16 +31,15 @@ internal class CommandBuilder : ICommandAttribute, ISummaryAttribute, IRequireRo
         return this;
     }
 
-    public CommandBuilder WithRequiredRole(IRequireRoleAttribute requireRole)
+    public CommandBuilder WithRequireRole(IRequireRoleAttribute requireRole)
     {
         RequiredRole = requireRole.RequiredRole;
         HideIfUnauthorized = requireRole.HideIfUnauthorized;
         return this;
     }
 
-    public CommandBuilder WithParameters(params CommandParameterBuilder[] parameters)
+    public CommandBuilder WithParameters(IEnumerable<CommandParameterInfo> parameters)
     {
-        _parameters ??= new List<CommandParameterBuilder>();
         _parameters.AddRange(parameters);
         return this;
     }
@@ -51,7 +50,7 @@ internal class CommandBuilder : ICommandAttribute, ISummaryAttribute, IRequireRo
         Summary = Summary,
         RequiredRole = RequiredRole,
         HideIfUnauthorized = HideIfUnauthorized,
-        Group = _commandGroup?.Build(),
-        Parameters = _parameters?.Select(p => p.Build()).ToList()
+        Group = _commandGroup,
+        Parameters = _parameters
     };
 }

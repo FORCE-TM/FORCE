@@ -28,7 +28,7 @@ public class Plugin : PluginBase
         [Summary("Login of the player to greet (if not specified, it will greet the last player who logged in)")]
         string? login = null)
     {
-        var player = Server.Players[(login ?? _lastLoggedInPlayer)!];
+        var player = Server.Players![(login ?? _lastLoggedInPlayer)!];
 
         if (player == null)
         {

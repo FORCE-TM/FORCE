@@ -1,8 +1,7 @@
-﻿using FORCE.Core.Models;
-using FORCE.Core.Plugin;
+﻿using FORCE.Core.Plugin.Models;
 using FORCE.Core.Shared;
 
-namespace FORCE.Core.Builders;
+namespace FORCE.Core.Plugin.Builders;
 
 internal class CommandGroupBuilder : ICommandGroupAttribute, ISummaryAttribute, IRequireRoleAttribute
 {
@@ -26,7 +25,7 @@ internal class CommandGroupBuilder : ICommandGroupAttribute, ISummaryAttribute, 
         return this;
     }
 
-    public CommandGroupBuilder WithRequiredRole(IRequireRoleAttribute requireRole)
+    public CommandGroupBuilder WithRequireRole(IRequireRoleAttribute requireRole)
     {
         RequiredRole = requireRole.RequiredRole;
         HideIfUnauthorized = requireRole.HideIfUnauthorized;

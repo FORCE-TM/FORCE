@@ -6,7 +6,7 @@ namespace FORCE.Core.Plugin;
 /// <summary>
 /// A class containing primary information about a plugin, such as its <see cref="Name"/>, <see cref="Version"/>, <see cref="Author"/> or <see cref="Summary"/>.
 /// </summary>
-public sealed class PluginDisplayInfo : IPluginAttribute, ISummaryAttribute, IColoredString
+public class PluginDisplayInfo : IPluginAttribute, ISummaryAttribute, IColoredString
 {
     /// <inheritdoc/>
     public string Name { get; set; } = null!;
