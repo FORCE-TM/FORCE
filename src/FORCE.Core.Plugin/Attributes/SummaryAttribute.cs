@@ -17,10 +17,10 @@ public sealed class SummaryAttribute : Attribute, ISummaryAttribute
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public string? Summary { get; set; }
+    public string? Summary { get; }
 }
 
 public interface ISummaryAttribute
 {
-    public string? Summary { get; set; }
+    public string? Summary { get; }
 }

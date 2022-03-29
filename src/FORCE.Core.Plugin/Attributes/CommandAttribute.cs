@@ -16,7 +16,7 @@ public sealed class CommandAttribute : Attribute, ICommandAttribute
     }
 
     /// <inheritdoc/>
-    public string[] Names { get; set; }
+    public string[] Names { get; }
 }
 
 public interface ICommandAttribute
@@ -24,5 +24,5 @@ public interface ICommandAttribute
     /// <summary>
     /// The name and aliases of the command.
     /// </summary>
-    public string[] Names { get; set; }
+    public string[] Names { get; }
 }

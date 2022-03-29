@@ -19,10 +19,10 @@ public sealed class RequireRoleAttribute : Attribute, IRequireRoleAttribute
     }
 
     /// <inheritdoc/>
-    public PlayerRole? RequiredRole { get; set; }
+    public PlayerRole? RequiredRole { get; }
 
     /// <inheritdoc/>
-    public bool? HideIfUnauthorized { get; set; }
+    public bool? HideIfUnauthorized { get; }
 }
 
 public interface IRequireRoleAttribute
@@ -30,10 +30,10 @@ public interface IRequireRoleAttribute
     /// <summary>
     /// The role from which a player will be able to use a command.
     /// </summary>
-    public PlayerRole? RequiredRole { get; set; }
+    public PlayerRole? RequiredRole { get; }
 
     /// <summary>
     /// Whether or not to hide the existence of a command to unauthorized players.
     /// </summary>
-    public bool? HideIfUnauthorized { get; set; }
+    public bool? HideIfUnauthorized { get; }
 }

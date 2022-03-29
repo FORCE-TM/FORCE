@@ -21,13 +21,13 @@ public sealed class PluginAttribute : Attribute, IPluginAttribute
     }
 
     /// <inheritdoc/>
-    public string Name { get; set; }
+    public string Name { get; }
 
     /// <inheritdoc/>
-    public Version Version { get; set; }
+    public Version Version { get; }
 
     /// <inheritdoc/>
-    public string? Author { get; set; }
+    public string? Author { get; }
 }
 
 public interface IPluginAttribute
@@ -35,15 +35,15 @@ public interface IPluginAttribute
     /// <summary>
     /// The plugin display name.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; }
 
     /// <summary>
     /// The plugin version.
     /// </summary>
-    public Version Version { get; set; }
+    public Version Version { get; }
 
     /// <summary>
     /// The plugin author. Nullable.
     /// </summary>
-    public string? Author { get; set; }
+    public string? Author { get; }
 }

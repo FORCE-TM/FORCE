@@ -14,10 +14,10 @@ public sealed class RemainderAttribute : Attribute, IRemainderAttribute
     }
 
     /// <inheritdoc/>
-    public bool IsRemainder { get; set; }
+    public bool IsRemainder { get; }
 }
 
 public interface IRemainderAttribute
 {
-    public bool IsRemainder { get; set; }
+    public bool IsRemainder { get; }
 }

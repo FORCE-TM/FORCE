@@ -13,10 +13,10 @@ public sealed class PersistentAttribute : Attribute, IPersistentAttribute
     }
 
     /// <inheritdoc/>
-    public bool IsPersistent { get; set; }
+    public bool IsPersistent { get; }
 }
 
 public interface IPersistentAttribute
 {
-    public bool IsPersistent { get; set; }
+    public bool IsPersistent { get; }
 }

@@ -11,11 +11,11 @@ public sealed class CommandGroupAttribute : Attribute, ICommandGroupAttribute
     /// <param name="prefixes">Prefix of the command group. Aliases can be added.</param>
     public CommandGroupAttribute(params string[] prefixes)
     {
-        Prefixes = prefixes;
+        GroupPrefixes = prefixes;
     }
 
     /// <inheritdoc/>
-    public string[] Prefixes { get; set; }
+    public string[]? GroupPrefixes { get; }
 }
 
 public interface ICommandGroupAttribute
@@ -23,5 +23,5 @@ public interface ICommandGroupAttribute
     /// <summary>
     /// The prefix and aliases of the command group.
     /// </summary>
-    public string[] Prefixes { get; set; }
+    public string[]? GroupPrefixes { get; }
 }
