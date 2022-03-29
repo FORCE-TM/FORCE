@@ -7,33 +7,33 @@ namespace FORCE.Core.Plugin;
 /// By default, a command can be used by anyone without requiring a role.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public sealed class AuthorizeAttribute : Attribute, IAuthorizeAttribute
+public sealed class RequireRoleAttribute : Attribute, IRequireRoleAttribute
 {
-    /// <inheritdoc cref="AuthorizeAttribute"/>
+    /// <inheritdoc cref="RequireRoleAttribute"/>
     /// <param name="role">Role from which a player will be able to use a command.</param>
     /// <param name="hideIfUnauthorized">Whether or not to hide the existence of a command to unauthorized players.</param>
-    public AuthorizeAttribute(PlayerRole role, bool hideIfUnauthorized = true)
+    public RequireRoleAttribute(PlayerRole role, bool hideIfUnauthorized = true)
     {
-        Role = role;
+        RequiredRole = role;
         HideIfUnauthorized = hideIfUnauthorized;
     }
 
     /// <inheritdoc/>
-    public PlayerRole Role { get; set; }
+    public PlayerRole? RequiredRole { get; set; }
 
     /// <inheritdoc/>
-    public bool HideIfUnauthorized { get; set; }
+    public bool? HideIfUnauthorized { get; set; }
 }
 
-public interface IAuthorizeAttribute
+public interface IRequireRoleAttribute
 {
     /// <summary>
     /// The role from which a player will be able to use a command.
     /// </summary>
-    public PlayerRole Role { get; set; }
+    public PlayerRole? RequiredRole { get; set; }
 
     /// <summary>
     /// Whether or not to hide the existence of a command to unauthorized players.
     /// </summary>
-    public bool HideIfUnauthorized { get; set; }
+    public bool? HideIfUnauthorized { get; set; }
 }
