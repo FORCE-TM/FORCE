@@ -18,24 +18,28 @@ internal class PluginBuilder
 
     public PluginInfo Build()
     {
-        var pluginClass = _module.GetTypes().SingleOrDefault(IsValidPluginClass);
+        var pluginClass = new ClassInfo(_module.GetTypes().SingleOrDefault(IsValidPluginClass)!);
 
-        if (pluginClass == null)
+        if (pluginClass.Type == null)
             throw new InvalidOperationException($"None, or more than one class inheriting {nameof(PluginBase)} were found in this module.");
 
-        if (!pluginClass.TryGetCustomAttribute<PluginAttribute>(out var pluginAttribute))
-            throw new InvalidOperationException($"Plugin class must be decorated with {nameof(PluginAttribute)}. Class: {pluginClass.FullName}");
+        if (!pluginClass.Type.TryGetCustomAttribute<PluginAttribute>(out var pluginAttribute))
+            throw new InvalidOperationException($"Plugin class must be decorated with {nameof(PluginAttribute)}. Class: {pluginClass.Type.FullName}");
 
-        var summaryAttribute = pluginClass.GetCustomAttribute<SummaryAttribute>();
+        var summaryAttribute = pluginClass.Type.GetCustomAttribute<SummaryAttribute>();
 
-        foreach (var commandClass in _module.GetTypes().Where(IsValidCommandClass))
+        foreach (var commandClass in _module.GetTypes().Where(IsValidCommandClass).Select(c => new ClassInfo(c)))
         {
+            if (pluginClass.Type == commandClass.Type)
+                pluginClass = commandClass;
+
             CommandGroupInfo? commandGroup = null;
 
-            if (commandClass.TryGetCustomAttribute<CommandGroupAttribute>(out var commandGroupAttribute))
+            if (commandClass.Type.TryGetCustomAttribute<CommandGroupAttribute>(out var commandGroupAttribute))
                 commandGroup = BuildCommandGroup(commandClass, commandGroupAttribute);
 
-            _commands.AddRange(BuildCommands(commandClass, commandGroup));
+            commandClass.Commands.AddRange(BuildCommands(commandClass, commandGroup));
+            _commands.AddRange(commandClass.Commands);
         }
 
         var plugin = new PluginInfo()
@@ -44,7 +48,8 @@ internal class PluginBuilder
             Version = pluginAttribute.Version,
             Author = pluginAttribute.Author,
             Summary = summaryAttribute?.Summary,
-            Commands = _commands
+            Commands = _commands,
+            Class = pluginClass
         };
 
         _commands.ForEach(c => c.Plugin = plugin);
@@ -52,11 +57,11 @@ internal class PluginBuilder
         return plugin;
     }
 
-    private CommandGroupInfo BuildCommandGroup(Type commandClass, CommandGroupAttribute commandGroupAttribute)
+    private CommandGroupInfo BuildCommandGroup(ClassInfo commandClass, CommandGroupAttribute commandGroupAttribute)
     {
         var commandGroupBuilder = new CommandGroupBuilder(commandGroupAttribute);
 
-        foreach (var attribute in commandClass.GetCustomAttributes())
+        foreach (var attribute in commandClass.Type.GetCustomAttributes())
         {
             switch (attribute)
             {
@@ -72,9 +77,9 @@ internal class PluginBuilder
         return commandGroupBuilder.Build();
     }
 
-    private IEnumerable<CommandInfo> BuildCommands(Type commandClass, CommandGroupInfo? commandGroup = null)
+    private IEnumerable<CommandInfo> BuildCommands(ClassInfo commandClass, CommandGroupInfo? commandGroup = null)
     {
-        foreach (var commandMethod in commandClass.GetMethods())
+        foreach (var commandMethod in commandClass.Type.GetMethods())
         {
             if (!commandMethod.TryGetCustomAttribute<CommandAttribute>(out var commandAttribute))
                 continue;
@@ -105,6 +110,8 @@ internal class PluginBuilder
                 commandGroup.Commands ??= new List<CommandInfo>();
                 commandGroup.Commands.Add(command);
             }
+
+            command.Class = commandClass;
 
             yield return command;
         }

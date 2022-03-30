@@ -12,6 +12,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
     public CommandGroupInfo? Group { get; set; }
     public List<CommandParameterInfo> Parameters { get; set; } = null!;
     public PluginInfo Plugin { get; set; } = null!;
+    public ClassInfo Class { get; set; } = null!;
 
     public override string ToString()
     {
