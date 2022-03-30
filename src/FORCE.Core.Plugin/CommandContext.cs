@@ -23,7 +23,7 @@ public class CommandContext : ContextBase
     /// Send a private message to the <see cref="Author"/>.
     /// </summary>
     /// <param name="message">Message to send.</param>
-    /// <param name="arrowPrefix">Whether to prefix the message with a single arrow "> ". Used as a distinction between public and private messages.</param>
+    /// <param name="arrowPrefix">Whether to prefix the message with a single arrow "> ". Used as to distinguish between public and private messages.</param>
     public async Task ReplyAsync(string message, bool arrowPrefix = true)
         => await Server.ChatSendServerMessageToIdAsync((arrowPrefix ? "$G> " : null) + message, Author.PlayerId);
 
@@ -31,7 +31,7 @@ public class CommandContext : ContextBase
     /// Send a public message that everyone will see.
     /// </summary>
     /// <param name="message">Message to send.</param>
-    /// <param name="arrowPrefix">Whether to prefix the message with a double arrow ">> ". Used as a distinction between public and private messages.</param>
+    /// <param name="arrowPrefix">Whether to prefix the message with a double arrow ">> ". Used as to distinguish between public and private messages.</param>
     public async Task SendAsync(string message, bool arrowPrefix = true)
         => await Server.ChatSendServerMessageAsync((arrowPrefix ? "$G>> " : null) + message);
 

@@ -48,19 +48,22 @@ public class Plugin : PluginBase
         {
             await Server.ChatSendServerMessageAsync($"$G>> Hey $FFF{player.NickName}$Z$S! Enjoy your stay (:");
         }
-        else if (player.Login == command.Author.Login)
-        {
-            if (login == null)
-                await command.SendAsAuthorAsync("Hey everyone!");
-            else
-                await command.ReplyAsync("$F00You can not greet yourself.");
-        }
         else
         {
             // That is so that "hey" will become "Hey"
             string greeting = char.ToUpper(command.Name[0]) + command.Name[1..].ToLower();
 
-            await command.SendAsAuthorAsync($"{greeting} $FFF{player.NickName}$Z$S!");
+            if (player.Login == command.Author.Login)
+            {
+                if (login == null)
+                    await command.SendAsAuthorAsync($"{greeting} everyone!");
+                else
+                    await command.ReplyAsync("$F00You can not greet yourself.");
+            }
+            else
+            {
+                await command.SendAsAuthorAsync($"{greeting} $FFF{player.NickName}$Z$S!");
+            }
         }
     }
 }
