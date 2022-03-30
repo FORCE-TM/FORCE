@@ -4,7 +4,14 @@
         "Port": 5000
     },
     "ColorScheme": {
-        "BaseColor": "FFF",
-        "AccentColor": "339"
+        "BaseColor": "$FF0",
+        "AccentColor": "$0AF"
+    },
+    "Plugins": {
+        "Directory": "Plugins",
+        "Enabled": [
+            //"Example\\Disabled.Plugin.dll",
+            "AutoGreeter\\Debug\\FORCE.Plugin.AutoGreeter.dll"
+        ]
     }
 }

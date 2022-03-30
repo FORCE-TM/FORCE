@@ -1,7 +1,6 @@
-﻿using System.Runtime.Loader;
-using System.Text.Json;
+﻿using System.Text.Json;
 using FORCE.Core.Models;
-using FORCE.Core.Plugin.Builders;
+using FORCE.Core.Plugin;
 using FORCE.Core.Shared;
 
 namespace FORCE.Core;
@@ -9,26 +8,41 @@ namespace FORCE.Core;
 public class Force
 {
     public ForceSettings Settings { get; }
-    public TmServer TmServer { get; }
+    public TmServer Server { get; }
+
+    internal PluginManager PluginManager { get; }
 
     public Force()
     {
-        Settings = JsonSerializer.Deserialize<ForceSettings>(File.ReadAllText(Path.Combine("Files", "Settings.json")))!;
+        Settings = JsonSerializer.Deserialize<ForceSettings>(File.ReadAllText(Path.Combine("Files", "Settings.json")),
+            new JsonSerializerOptions() { ReadCommentHandling = JsonCommentHandling.Skip })!;
 
-        TmServer = new TmServer(Settings.Server.Host, Settings.Server.Port);
+        Server = new TmServer(Settings.Server.Host, Settings.Server.Port);
 
-        var assemblyLoadContext = new AssemblyLoadContext(null, isCollectible: true);
-        var assembly = assemblyLoadContext.LoadFromAssemblyPath(new DirectoryInfo(@"Plugins\Native\AutoGreeter\Debug\FORCE.Plugin.AutoGreeter.dll").FullName);
+        PluginManager = new PluginManager(this);
+    }
 
-        var pluginBuilder = new PluginBuilder(assembly.Modules.Single());
+    public void LoadPlugins()
+    {
+        string pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(), Settings.Plugins.Directory);
 
-        var plugin = pluginBuilder.Build();
-
-        Console.WriteLine($"Loaded {plugin}");
-
-        foreach (var command in plugin.Commands)
+        foreach (string pluginFile in Settings.Plugins.Enabled)
         {
-            Console.WriteLine($"   {command}");
+            string pluginPath = Path.Combine(pluginsDirectory, pluginFile);
+
+            if (PluginManager.TryBuildPluginFromAssemblyPath(pluginPath, out var plugin))
+            {
+                PluginManager.LoadPlugin(plugin);
+
+                Console.WriteLine($"Loaded {plugin}");
+
+                foreach (var command in plugin.Commands)
+                {
+                    Console.WriteLine($"   {command}");
+                }
+
+                Console.WriteLine();
+            }
         }
     }
 }

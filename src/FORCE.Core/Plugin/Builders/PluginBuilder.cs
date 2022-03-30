@@ -8,11 +8,13 @@ namespace FORCE.Core.Plugin.Builders;
 internal class PluginBuilder
 {
     private readonly Module _module;
+    private readonly Force _force;
     private readonly List<CommandInfo> _commands;
 
-    public PluginBuilder(Module module)
+    public PluginBuilder(Module module, Force force)
     {
         _module = module;
+        _force = force;
         _commands = new List<CommandInfo>();
     }
 
@@ -50,6 +52,13 @@ internal class PluginBuilder
             Commands = _commands,
             Class = pluginClass
         };
+
+        plugin.SetContext(new ContextBase()
+        {
+            Plugin = plugin,
+            Server = _force.Server,
+            ColorScheme = _force.Settings.ColorScheme
+        });
 
         _commands.ForEach(c => c.Plugin = plugin);
 
@@ -150,14 +159,17 @@ internal class PluginBuilder
         }
     }
 
-    private bool IsValidPluginClass(Type type) =>
+    public static bool IsValidPluginModule(Module module) =>
+        module.GetTypes().Any(IsValidPluginClass);
+
+    public static bool IsValidPluginClass(Type type) =>
         type.IsClass &&
         type.IsPublic &&
         !type.IsAbstract &&
         !type.ContainsGenericParameters &&
         typeof(PluginBase).IsAssignableFrom(type);
 
-    private bool IsValidCommandClass(Type type) =>
+    public static bool IsValidCommandClass(Type type) =>
         type.IsClass &&
         type.IsPublic &&
         !type.IsAbstract &&
