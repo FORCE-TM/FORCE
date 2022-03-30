@@ -78,6 +78,12 @@ internal class PluginBuilder
 
     private IEnumerable<CommandInfo> BuildCommands(ClassInfo commandClass, CommandGroupInfo? commandGroup = null)
     {
+        if (commandGroup != null)
+        {
+            commandGroup.Commands = new List<CommandInfo>();
+            commandGroup.Class = commandClass;
+        }
+
         foreach (var commandMethod in commandClass.Type.GetMethods())
         {
             if (!commandMethod.TryGetCustomAttribute<CommandAttribute>(out var commandAttribute))
@@ -105,9 +111,7 @@ internal class PluginBuilder
             if (commandGroup != null)
             {
                 commandBuilder.WithGroup(commandGroup);
-
-                commandGroup.Commands ??= new List<CommandInfo>();
-                commandGroup.Commands.Add(command);
+                commandGroup.Commands!.Add(command);
             }
 
             command.Class = commandClass;
