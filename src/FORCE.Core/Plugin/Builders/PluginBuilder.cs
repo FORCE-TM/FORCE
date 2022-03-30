@@ -134,6 +134,9 @@ internal class PluginBuilder
             {
                 switch (attribute)
                 {
+                    case UsageAttribute usage:
+                        commandParameterBuilder.WithUsage(usage);
+                        break;
                     case SummaryAttribute summary:
                         commandParameterBuilder.WithSummary(summary);
                         break;

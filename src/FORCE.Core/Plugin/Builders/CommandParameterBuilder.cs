@@ -3,12 +3,13 @@ using FORCE.Core.Plugin.Models;
 
 namespace FORCE.Core.Plugin.Builders;
 
-internal class CommandParameterBuilder : ISummaryAttribute, IRemainderAttribute
+internal class CommandParameterBuilder : IUsageAttribute, ISummaryAttribute, IRemainderAttribute
 {
     private readonly ParameterInfo _parameter;
     private readonly string _parameterPath;
     private readonly int _implParameterCount;
 
+    public string? UsageName { get; private set; }
     public string? Summary { get; private set; }
     public bool IsRemainder { get; private set; }
 
@@ -23,7 +24,13 @@ internal class CommandParameterBuilder : ISummaryAttribute, IRemainderAttribute
             throw new InvalidOperationException($"At the moment, only parameters of type {typeof(string)} are supported in commands. {_parameterPath}");
 
         _parameter = parameter;
-        _implParameterCount = ((MethodInfo)_parameter.Member).GetParameters().Length;
+        _implParameterCount = ((MethodInfo)parameter.Member).GetParameters().Length;
+    }
+
+    public CommandParameterBuilder WithUsage(IUsageAttribute usage)
+    {
+        UsageName = usage.UsageName;
+        return this;
     }
 
     public CommandParameterBuilder WithSummary(ISummaryAttribute summary)
@@ -53,6 +60,7 @@ internal class CommandParameterBuilder : ISummaryAttribute, IRemainderAttribute
         Name = _parameter.Name!,
         DefaultValue = _parameter.DefaultValue,
         HasDefaultValue = _parameter.HasDefaultValue,
+        UsageName = UsageName,
         Summary = Summary,
         IsRemainder = IsRemainder
     };

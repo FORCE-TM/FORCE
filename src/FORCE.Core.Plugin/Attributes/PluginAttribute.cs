@@ -1,8 +1,8 @@
 ﻿namespace FORCE.Core.Plugin;
 
 /// <summary>
-/// Indicates that a class is a FORCE plugin.<br/>
-/// This must be used for a plugin to be discoverable.<br/>
+/// Indicates the <see cref="Name"/>, <see cref="Version"/> and <see cref="Author"/> of a FORCE plugin.<br/>
+/// This attribute must be used for a plugin to be discoverable.<br/>
 /// This same class must also inherit from <see cref="PluginBase"/>.<br/>
 /// There can only be one plugin class per assembly, or at least per assembly module.
 /// </summary>
