@@ -38,8 +38,7 @@ internal class PluginBuilder
             if (commandClass.Type.TryGetCustomAttribute<CommandGroupAttribute>(out var commandGroupAttribute))
                 commandGroup = BuildCommandGroup(commandClass, commandGroupAttribute);
 
-            commandClass.Commands.AddRange(BuildCommands(commandClass, commandGroup));
-            _commands.AddRange(commandClass.Commands);
+            _commands.AddRange(BuildCommands(commandClass, commandGroup));
         }
 
         var plugin = new PluginInfo()
