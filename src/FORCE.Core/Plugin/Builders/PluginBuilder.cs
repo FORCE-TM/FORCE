@@ -111,6 +111,7 @@ internal class PluginBuilder
             }
 
             command.Class = commandClass;
+            command.Method = commandMethod;
 
             yield return command;
         }

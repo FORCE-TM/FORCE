@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using FORCE.Core.Shared;
 
 namespace FORCE.Core.Plugin.Models;
@@ -13,6 +14,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
     public List<CommandParameterInfo> Parameters { get; set; } = null!;
     public PluginInfo Plugin { get; set; } = null!;
     public ClassInfo Class { get; set; } = null!;
+    public MethodInfo Method { get; set; }
 
     public override string ToString()
     {
