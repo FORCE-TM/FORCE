@@ -21,18 +21,21 @@ public sealed class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
 
         _tmServer = tmServer;
 
+        LoadOnlinePlayersAsync().GetAwaiter().GetResult();
+
         _tmServer.OnPlayerInfoChanged += newPlayerInfo =>
         {
-            var player = _players[newPlayerInfo.PlayerId];
+            var player = this[newPlayerInfo.PlayerId];
 
-            player.TeamId = newPlayerInfo.TeamId;
-            player.IsSpectator = newPlayerInfo.SpectatorStatus.Spectator;
-            player.IsReferee = newPlayerInfo.Flags.IsReferee;
+            if (player != null)
+            {
+                player.TeamId = newPlayerInfo.TeamId;
+                player.IsSpectator = newPlayerInfo.SpectatorStatus.Spectator;
+                player.IsReferee = newPlayerInfo.Flags.IsReferee;
+            }
 
             return Task.CompletedTask;
         };
-
-        LoadOnlinePlayersAsync().GetAwaiter().GetResult();
     }
 
     private async Task LoadOnlinePlayersAsync()
