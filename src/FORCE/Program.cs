@@ -1,4 +1,5 @@
 ﻿using FORCE.Core;
+using GbxRemoteNet;
 
 namespace FORCE;
 
@@ -8,53 +9,38 @@ internal static class Program
     {
         var force = new Force();
 
+        if (!await ConnectAndAuthenticateAsync(force.Server))
+            return;
+
+        Console.WriteLine();
+        await force.StartAsync();
+
+        await Task.Delay(-1);
+    }
+
+    private static async Task<bool> ConnectAndAuthenticateAsync(GbxRemoteClient server)
+    {
         Console.WriteLine("Connecting...");
 
-        if (!await force.Server.ConnectAsync())
+        if (!await server.ConnectAsync())
         {
             Console.WriteLine("Could not establish connection to the server.");
-            return;
+            return false;
         }
 
         Console.WriteLine("Authenticating...");
 
         try
         {
-            await force.Server.AuthenticateAsync("SuperAdmin", "SuperAdmin");
+            await server.AuthenticateAsync("SuperAdmin", "SuperAdmin");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Could not authenticate to the server: {ex.Message}");
-            return;
+            return false;
         }
 
-        Console.WriteLine("Successfully connected and authenticated!" + Environment.NewLine);
-
-        force.LoadPlugins();
-
-        Console.WriteLine($"Online players: {force.Server.Players!.Count}");
-
-        foreach (var player in force.Server.Players)
-        {
-            Console.WriteLine($"   - [{player.Login}] {player.NickName} (Spectator: {player.IsSpectator})");
-        }
-
-        await force.Server.EnableCallbacksAsync();
-
-        Console.WriteLine(Environment.NewLine + "Chat:");
-
-        force.Server.OnPlayerChat += (playerUid, _, text, _) =>
-        {
-            if (playerUid != 0) // 0 = server
-            {
-                var player = force.Server.Players[playerUid];
-
-                Console.WriteLine($"   [{player!.NickName}] {text}");
-            }
-
-            return Task.CompletedTask;
-        };
-
-        await Task.Delay(-1);
+        Console.WriteLine("Successfully connected and authenticated!");
+        return true;
     }
 }

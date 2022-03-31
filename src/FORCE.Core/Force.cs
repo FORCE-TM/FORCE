@@ -11,6 +11,7 @@ public class Force
     public TmServer Server { get; }
 
     internal PluginManager PluginManager { get; }
+    internal CommandHandler CommandHandler { get; }
 
     public Force()
     {
@@ -20,9 +21,19 @@ public class Force
         Server = new TmServer(Settings.Server.Host, Settings.Server.Port);
 
         PluginManager = new PluginManager(this);
+        CommandHandler = new CommandHandler(this);
     }
 
-    public void LoadPlugins()
+    public async Task StartAsync()
+    {
+        LoadPlugins();
+
+        await Server.EnableCallbacksAsync();
+
+        CommandHandler.StartListening();
+    }
+
+    private void LoadPlugins()
     {
         string pluginsDirectory = Path.Combine(Directory.GetCurrentDirectory(), Settings.Plugins.Directory);
 

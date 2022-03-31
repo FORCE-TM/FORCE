@@ -6,8 +6,8 @@ namespace FORCE.Core.Plugin;
 
 internal class PluginManager
 {
-    public event Action<PluginInfo, bool>? OnPluginLoaded;
-    public event Action<PluginInfo, bool>? OnPluginUnloaded;
+    public event Action<PluginInfo>? OnPluginLoaded;
+    public event Action<PluginInfo>? OnPluginUnloaded;
 
     private readonly Force _force;
     private readonly List<PluginInfo> _plugins;
@@ -27,7 +27,7 @@ internal class PluginManager
 
         plugin.Class.GetInstance<PluginBase>().OnPluginLoadAsync(reload);
 
-        OnPluginLoaded?.Invoke(plugin, reload);
+        OnPluginLoaded?.Invoke(plugin);
     }
 
     public bool UnloadPlugin(PluginInfo plugin, bool reload = false)
@@ -41,7 +41,7 @@ internal class PluginManager
         // TODO: Remove subscribed event handlers
         // Only after OnPluginUnload, to make sure the plugin can not register any new event
 
-        OnPluginUnloaded?.Invoke(plugin, reload);
+        OnPluginUnloaded?.Invoke(plugin);
 
         return true;
     }

@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BoomTown.FuzzySharp" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Files\Settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
