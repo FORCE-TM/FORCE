@@ -34,7 +34,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
         {
             commandBuilder.Append(' ');
             commandBuilder.Append(parameter.HasDefaultValue ? '[' : '<');
-            commandBuilder.Append(parameter.Name);
+            commandBuilder.Append(parameter.UsageName ?? parameter.Name);
 
             if (parameter.HasDefaultValue && parameter.DefaultValue is not null)
             {
