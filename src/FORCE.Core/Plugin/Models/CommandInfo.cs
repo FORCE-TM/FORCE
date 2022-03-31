@@ -11,6 +11,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
     public PlayerRole? RequiredRole { get; set; }
     public bool HideIfUnauthorized { get; set; }
     public CommandGroupInfo? Group { get; set; }
+    public bool IsInGroup => Group != null;
     public List<CommandParameterInfo> Parameters { get; set; } = null!;
     public PluginInfo Plugin { get; set; } = null!;
     public ClassInfo Class { get; set; } = null!;
