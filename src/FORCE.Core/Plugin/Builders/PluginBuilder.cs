@@ -115,13 +115,13 @@ internal class PluginBuilder
 
             commandBuilder.WithParameters(BuildCommandParameters(commandMethod));
 
+            if (commandGroup != null)
+                commandBuilder.WithGroup(commandGroup);
+
             var command = commandBuilder.Build();
 
             if (commandGroup != null)
-            {
-                commandBuilder.WithGroup(commandGroup);
                 commandGroup.Commands!.Add(command);
-            }
 
             command.Class = commandClass;
             command.Method = commandMethod;
