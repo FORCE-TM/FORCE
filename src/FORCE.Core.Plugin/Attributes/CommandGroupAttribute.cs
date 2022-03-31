@@ -15,7 +15,7 @@ public sealed class CommandGroupAttribute : Attribute, ICommandGroupAttribute
     }
 
     /// <inheritdoc/>
-    public string[]? GroupPrefixes { get; }
+    public string[] GroupPrefixes { get; }
 }
 
 public interface ICommandGroupAttribute
@@ -23,5 +23,5 @@ public interface ICommandGroupAttribute
     /// <summary>
     /// The prefix and aliases of the command group.
     /// </summary>
-    public string[]? GroupPrefixes { get; }
+    public string[] GroupPrefixes { get; }
 }

@@ -23,9 +23,9 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
 
         commandBuilder.Append('/');
 
-        if (Group != null)
+        if (IsInGroup)
         {
-            commandBuilder.Append(Group.GroupPrefixes!.First());
+            commandBuilder.Append(Group!.GroupPrefixes.First());
             commandBuilder.Append(' ');
         }
 
