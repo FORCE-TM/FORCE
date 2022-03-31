@@ -22,7 +22,7 @@ public sealed class RequireRoleAttribute : Attribute, IRequireRoleAttribute
     public PlayerRole? RequiredRole { get; }
 
     /// <inheritdoc/>
-    public bool? HideIfUnauthorized { get; }
+    public bool HideIfUnauthorized { get; }
 }
 
 public interface IRequireRoleAttribute
@@ -35,5 +35,5 @@ public interface IRequireRoleAttribute
     /// <summary>
     /// Whether or not to hide the existence of a command to unauthorized players.
     /// </summary>
-    public bool? HideIfUnauthorized { get; }
+    public bool HideIfUnauthorized { get; }
 }

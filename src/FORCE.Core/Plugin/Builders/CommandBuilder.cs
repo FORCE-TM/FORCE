@@ -11,7 +11,7 @@ internal class CommandBuilder : ICommandAttribute, ISummaryAttribute, IRequireRo
     public string[] Names { get; }
     public string? Summary { get; private set; }
     public PlayerRole? RequiredRole { get; private set; }
-    public bool? HideIfUnauthorized { get; private set; }
+    public bool HideIfUnauthorized { get; private set; }
 
     public CommandBuilder(ICommandAttribute command)
     {

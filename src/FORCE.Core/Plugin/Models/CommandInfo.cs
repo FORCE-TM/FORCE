@@ -9,7 +9,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
     public string[] Names { get; set; } = null!;
     public string? Summary { get; set; }
     public PlayerRole? RequiredRole { get; set; }
-    public bool? HideIfUnauthorized { get; set; }
+    public bool HideIfUnauthorized { get; set; }
     public CommandGroupInfo? Group { get; set; }
     public List<CommandParameterInfo> Parameters { get; set; } = null!;
     public PluginInfo Plugin { get; set; } = null!;

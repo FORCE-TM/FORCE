@@ -8,7 +8,7 @@ internal class CommandGroupBuilder : ICommandGroupAttribute, ISummaryAttribute, 
     public string[]? GroupPrefixes { get; }
     public string? Summary { get; private set; }
     public PlayerRole? RequiredRole { get; private set; }
-    public bool? HideIfUnauthorized { get; private set; }
+    public bool HideIfUnauthorized { get; private set; }
 
     public CommandGroupBuilder(ICommandGroupAttribute commandGroup)
     {
