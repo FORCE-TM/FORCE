@@ -12,7 +12,7 @@ internal class PluginInfo : PluginDisplayInfo
 
     public void SetContext(ContextBase context)
     {
-        var pluginInstance = (PluginBase)Class.Instance;
+        var pluginInstance = Class.GetInstance<PluginBase>();
 
         pluginInstance.Plugin = context.Plugin;
         pluginInstance.Server = context.Server;

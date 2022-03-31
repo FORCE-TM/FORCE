@@ -3,7 +3,7 @@
 /// <summary>
 /// Indicates that the value of a field or property should be preserved after a plugin reloads.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class PersistentAttribute : Attribute, IPersistentAttribute
 {
     /// <inheritdoc/>

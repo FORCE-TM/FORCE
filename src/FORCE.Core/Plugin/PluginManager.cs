@@ -25,7 +25,7 @@ internal class PluginManager
     {
         _plugins.Add(plugin);
 
-        ((PluginBase)plugin.Class.Instance).OnPluginLoadAsync(reload);
+        plugin.Class.GetInstance<PluginBase>().OnPluginLoadAsync(reload);
 
         OnPluginLoaded?.Invoke(plugin, reload);
     }
@@ -36,8 +36,7 @@ internal class PluginManager
             return false;
 
         plugin.AssemblyLoadContext.Unload();
-
-        ((PluginBase)plugin.Class.Instance).OnPluginUnloadAsync(reload);
+        plugin.Class.GetInstance<PluginBase>().OnPluginUnloadAsync(reload);
 
         // TODO: Remove subscribed event handlers
         // Only after OnPluginUnload, to make sure the plugin can not register any new event
@@ -54,6 +53,15 @@ internal class PluginManager
 
         if (!TryBuildPluginFromAssemblyPath(plugin.Assembly.Location, out var reloadedPlugin))
             return false;
+
+        var oldPersistentMembers = plugin.Commands
+            .Select(c => c.Class)
+            .Where(c => c.Instanced)
+            .ToDictionary(c => c.Type.FullName!, c => c.GetPersistentMembers());
+
+        foreach (var commandClass in reloadedPlugin.Commands.Select(c => c.Class))
+            if (oldPersistentMembers.TryGetValue(commandClass.Type.FullName!, out var persistentMembers))
+                commandClass.SetPersistentMembers(persistentMembers);
 
         LoadPlugin(reloadedPlugin, true);
         return true;
