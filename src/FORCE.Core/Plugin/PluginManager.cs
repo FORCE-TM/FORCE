@@ -56,10 +56,12 @@ internal class PluginManager
 
         var oldPersistentMembers = plugin.Commands
             .Select(c => c.Class)
+            .Append(plugin.Class)
+            .Distinct()
             .Where(c => c.Instanced)
             .ToDictionary(c => c.Type.FullName!, c => c.GetPersistentMembers());
 
-        foreach (var commandClass in reloadedPlugin.Commands.Select(c => c.Class))
+        foreach (var commandClass in reloadedPlugin.Commands.Select(c => c.Class).Append(reloadedPlugin.Class).Distinct())
             if (oldPersistentMembers.TryGetValue(commandClass.Type.FullName!, out var persistentMembers))
                 commandClass.SetPersistentMembers(persistentMembers);
 
