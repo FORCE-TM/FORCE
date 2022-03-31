@@ -4,7 +4,7 @@ namespace FORCE.Core.Plugin.Models;
 
 internal class CommandGroupInfo : ICommandGroupAttribute, ISummaryAttribute, IRequireRoleAttribute
 {
-    public string[] GroupPrefixes { get; set; } = null!;
+    public string[] Prefixes { get; set; } = null!;
     public string? Summary { get; set; }
     public PlayerRole? RequiredRole { get; set; }
     public bool HideIfUnauthorized { get; set; }

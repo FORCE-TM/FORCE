@@ -80,7 +80,7 @@ internal class CommandHandler
         foreach (var pluginCommand in _commands.OrderByDescending(c => c.IsInGroup))
         {
             string[] matchNames = pluginCommand.IsInGroup
-                ? pluginCommand.Group!.GroupPrefixes
+                ? pluginCommand.Group!.Prefixes
                     .SelectMany(prefix => pluginCommand.Names.Select(name => string.Join(' ', prefix, name)))
                     .ToArray()
                 : pluginCommand.Names;

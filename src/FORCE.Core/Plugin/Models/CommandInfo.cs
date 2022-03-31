@@ -25,7 +25,7 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
 
         if (IsInGroup)
         {
-            commandBuilder.Append(Group!.GroupPrefixes.First());
+            commandBuilder.Append(Group!.Prefixes.First());
             commandBuilder.Append(' ');
         }
 
