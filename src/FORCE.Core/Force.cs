@@ -49,6 +49,11 @@ public class Force
 
                 foreach (var command in plugin.Commands)
                 {
+                    if (command.Disabled)
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    else
+                        Console.ResetColor();
+
                     Console.WriteLine($"   {command}");
                 }
 

@@ -77,7 +77,7 @@ internal class CommandHandler
         string[] textSplit = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         // Prioritize groups in case a command would be named the same as a group and would match first
-        foreach (var pluginCommand in _commands.OrderByDescending(c => c.IsInGroup))
+        foreach (var pluginCommand in _commands.Where(c => !c.Disabled).OrderByDescending(c => c.IsInGroup))
         {
             string[] matchNames = pluginCommand.IsInGroup
                 ? pluginCommand.Group!.Prefixes

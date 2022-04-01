@@ -10,6 +10,9 @@ internal class PluginInfo : PluginDisplayInfo
     public AssemblyLoadContext AssemblyLoadContext { get; set; } = null!;
     public Assembly Assembly => AssemblyLoadContext.Assemblies.Single();
 
+    public IEnumerable<CommandInfo> GetEnabledCommands()
+        => Commands.Where(c => !c.Disabled);
+
     public void SetContext(ContextBase context)
     {
         var pluginInstance = Class.GetInstance<PluginBase>();

@@ -6,6 +6,7 @@ namespace FORCE.Core.Plugin.Models;
 
 internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleAttribute
 {
+    public bool Disabled { get; set; }
     public string[] Names { get; set; } = null!;
     public string? Summary { get; set; }
     public PlayerRole? RequiredRole { get; set; }
