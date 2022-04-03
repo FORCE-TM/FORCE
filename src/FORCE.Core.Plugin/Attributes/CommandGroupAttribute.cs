@@ -1,7 +1,7 @@
 ﻿namespace FORCE.Core.Plugin;
 
 /// <summary>
-/// Indicates that a class is a command group.<br/>
+/// Indicates that a class is a command group. This is optional.<br/>
 /// Command groups allow to add a prefix to all of the commands in a class.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]

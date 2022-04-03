@@ -1,7 +1,7 @@
 ﻿namespace FORCE.Core.Plugin;
 
 /// <summary>
-/// Adds a summary to your plugin, command group, command or command parameter.
+/// Adds a summary to your plugin, command group, command or command parameter. This is optional.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Parameter)]
 public sealed class SummaryAttribute : Attribute, ISummaryAttribute
