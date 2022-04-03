@@ -54,16 +54,7 @@ internal class PluginManager
         if (!TryBuildPluginFromAssemblyPath(plugin.Assembly.Location, out var reloadedPlugin))
             return false;
 
-        var oldPersistentMembers = plugin.Commands
-            .Select(c => c.Class)
-            .Append(plugin.Class)
-            .Distinct()
-            .Where(c => c.Instanced)
-            .ToDictionary(c => c.Type.FullName!, c => c.GetPersistentMembers());
-
-        foreach (var commandClass in reloadedPlugin.Commands.Select(c => c.Class).Append(reloadedPlugin.Class).Distinct())
-            if (oldPersistentMembers.TryGetValue(commandClass.Type.FullName!, out var persistentMembers))
-                commandClass.SetPersistentMembers(persistentMembers);
+        LoadPersistentMembers(plugin, reloadedPlugin);
 
         LoadPlugin(reloadedPlugin, true);
         return true;
@@ -87,5 +78,23 @@ internal class PluginManager
         plugin.AssemblyLoadContext = assemblyLoadContext;
 
         return true;
+    }
+
+    private void LoadPersistentMembers(PluginInfo unloadedPlugin, PluginInfo reloadedPlugin)
+    {
+        var oldPersistentMembers = unloadedPlugin.GetEnabledCommands()
+            .Select(c => c.Class)
+            .Append(unloadedPlugin.Class)
+            .Distinct()
+            .Where(c => c.Instanced)
+            .ToDictionary(c => c.Type.FullName!, c => c.GetPersistentMembers());
+
+        foreach (var commandClass in reloadedPlugin.GetEnabledCommands().Select(c => c.Class).Append(reloadedPlugin.Class).Distinct())
+        {
+            if (oldPersistentMembers.TryGetValue(commandClass.Type.FullName!, out var persistentMembers))
+            {
+                commandClass.SetPersistentMembers(persistentMembers);
+            }
+        }
     }
 }
