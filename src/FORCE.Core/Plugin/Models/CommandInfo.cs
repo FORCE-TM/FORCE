@@ -6,7 +6,6 @@ namespace FORCE.Core.Plugin.Models;
 
 internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleAttribute
 {
-    public bool Disabled { get; set; }
     public string[] Names { get; set; } = null!;
     public string? Summary { get; set; }
     public PlayerRole? RequiredRole { get; set; }
@@ -17,6 +16,13 @@ internal class CommandInfo : ICommandAttribute, ISummaryAttribute, IRequireRoleA
     public PluginInfo Plugin { get; set; } = null!;
     public ClassInfo Class { get; set; } = null!;
     public MethodInfo Method { get; set; } = null!;
+
+    private bool _disabled;
+    public bool Disabled
+    {
+        get => _disabled || (IsInGroup && Group!.Disabled);
+        set => _disabled = value;
+    }
 
     public override string ToString()
     {

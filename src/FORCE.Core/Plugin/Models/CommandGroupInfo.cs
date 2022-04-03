@@ -9,4 +9,6 @@ internal class CommandGroupInfo : ICommandGroupAttribute, ISummaryAttribute, IRe
     public PlayerRole? RequiredRole { get; set; }
     public bool HideIfUnauthorized { get; set; }
     public ClassInfo Class { get; set; } = null!;
+
+    public bool Disabled { get; set; }
 }
