@@ -8,7 +8,7 @@ namespace FORCE.Core.Shared;
 
 /// <summary>
 /// A read-only collection of <see cref="PlayerDetailedInfo"/>, containing the online players of the server.<br/>
-/// This collection can be accessed both using a player login (<see cref="this[string]"/>) or UID (<see cref="this[int]"/>).
+/// This collection can be accessed both by using a player login (<see cref="this[string]"/>) or UID (<see cref="this[int]"/>).
 /// </summary>
 public sealed class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
 {
@@ -82,5 +82,15 @@ public sealed class PlayerList : IReadOnlyCollection<PlayerDetailedInfo>
     public IEnumerator<PlayerDetailedInfo> GetEnumerator() => _players.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    /// <summary>
+    /// Just a shortcut method for: <code>_players.Where(p => p.IsSpectator)</code>
+    /// </summary>
+    public IEnumerable<PlayerDetailedInfo> GetSpectators() => _players.Where(p => p.IsSpectator);
+
     public int Count => _players.Count;
+
+    /// <summary>
+    /// Just a shortcut method for: <code>_players.Count(p => p.IsSpectator)</code>
+    /// </summary>
+    public int SpectatorCount => _players.Count(p => p.IsSpectator);
 }
