@@ -5,12 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <BaseOutputPath>..\..\FORCE\bin\Debug\net6.0\Plugins\AutoGreeter</BaseOutputPath>
+    <BaseOutputPath>..\..\src\FORCE\bin\Debug\net6.0\Plugins\AutoGreeter</BaseOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FORCE.Core.Plugin\FORCE.Core.Plugin.csproj" />
+    <ProjectReference Include="..\..\src\FORCE.Core.Plugin\FORCE.Core.Plugin.csproj" />
   </ItemGroup>
 
 </Project>
